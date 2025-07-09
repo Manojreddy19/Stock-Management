@@ -1,6 +1,5 @@
 package com.example.stockmanagement.domain;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class AdjustmentDetail {
@@ -19,3 +18,4 @@ public class AdjustmentDetail {
 	
 	
 }
+

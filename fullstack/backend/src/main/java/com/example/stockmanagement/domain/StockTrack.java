@@ -1,5 +1,6 @@
 package com.example.stockmanagement.domain;
 
+
 import java.util.Date;
 
 import com.example.stockmanagement.utilities.AdjustmentType;
@@ -16,3 +17,4 @@ public class StockTrack {
 	
 	
 }
+
