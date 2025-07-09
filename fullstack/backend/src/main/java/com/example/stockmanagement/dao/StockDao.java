@@ -6,7 +6,7 @@ import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
 
 public interface StockDao {
-	public Long InsertAndSendBackBId(StockMaster stock);
+	public Long insertAndSendBackBId(StockMaster stock);
 
 	public Long getQunatityById(Long bId);
 
