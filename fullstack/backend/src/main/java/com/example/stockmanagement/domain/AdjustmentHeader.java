@@ -4,6 +4,7 @@ package com.example.stockmanagement.domain;
 import java.time.LocalDateTime;
 
 public class AdjustmentHeader {
+	
 	private int adjustmentId;
 	private char adjustmentType;
 	private double amount ;
@@ -16,6 +17,26 @@ public class AdjustmentHeader {
 	
 	
 	
+	public AdjustmentHeader(int adjustmentId, char adjustmentType, double amount, char status, String createdBy,
+			LocalDateTime createdAt, String modifiedBy, String modifiedAt, String remarks) {
+		super();
+		this.adjustmentId = adjustmentId;
+		this.adjustmentType = adjustmentType;
+		this.amount = amount;
+		this.status = status;
+		this.createdBy = createdBy;
+		this.createdAt = createdAt;
+		this.modifiedBy = modifiedBy;
+		this.modifiedAt = modifiedAt;
+		this.remarks = remarks;
+	}
+	
+	
+	public AdjustmentHeader() {
+		super();
+	}
+
+
 	public int getAdjustmentId() {
 		return adjustmentId;
 	}
