@@ -7,8 +7,8 @@ import java.util.Date;
 public class StockMaster {
 	private String productId;
 	private String batch;
-	private long BatchId;
-	private int quantity;
+	private Long BatchId;
+	private Integer quantity;
 	private Date expiryDate;
 	private Double mrp;
 	private String createdBy;

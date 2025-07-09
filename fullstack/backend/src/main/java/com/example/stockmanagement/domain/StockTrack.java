@@ -1,13 +1,14 @@
 package com.example.stockmanagement.domain;
 
-import java.time.LocalDate;
 import java.util.Date;
 
+import com.example.stockmanagement.utilities.AdjustmentType;
+
 public class StockTrack {
-	private Double batchId;
-	private char transactionType;
-	private int quantity;
-	private int openStock;
+	private Long batchId;
+	private AdjustmentType transactionType;
+	private Integer quantity;
+	private Integer openStock;
 	private Date createdDate;
 	private Date createdBy;
 	
