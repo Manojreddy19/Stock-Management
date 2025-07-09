@@ -2,7 +2,7 @@ package com.example.stockmanagement.dao;
 
 import com.example.stockmanagement.domain.StockTrack;
 
-public interface StockTrackDao {
+public interface StockTrackDAO {
 	boolean addStock(StockTrack stocktrack);
 
 }
