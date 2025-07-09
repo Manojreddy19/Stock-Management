@@ -36,6 +36,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/developer/Desktop/StockManagement/Stock-Management/fullstack/backend/src/main/java/com/example/stockmanagement/utilities/mysql-connector-j-9.3.0.jar"/>
+	<classpathentry kind="lib" path="/home/mphs/Desktop/training-mourya/mp-training/tasks/multi-module-project/Stock-Management/fullstack/backend/src/main/java/com/example/stockmanagement/utilities/mysql-connector-j-9.3.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
