@@ -24,7 +24,7 @@ public class StockIServicempl implements StockService {
 
 	@Override
 	@Transactional
-	public boolean stockUp(Adjustment adjustmentHeader) {
+	public boolean stockUp(Adjustment adjustmentHeader) throws Exception {
 		List<AdjustmentDetail> adjustmentDetails = adjustmentHeader.getAdjustmentDetails();
 		for (AdjustmentDetail detail : adjustmentDetails) {
 			long generatedId = stockDao.insertAndSendBackBId(new StockMaster(detail.getProductId(), detail.getBatch(),
