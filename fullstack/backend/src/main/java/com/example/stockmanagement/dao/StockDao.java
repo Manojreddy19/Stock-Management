@@ -10,10 +10,10 @@ public interface StockDao {
 
 	public Integer getQunatityById(Long bId) throws Exception;
 
-	public String modifyStockQuantityByBId(Long bId, int qunatity, String modifiedBy) throws Exception;
+	public void modifyStockQuantityByBId(Long bId, int qunatity, String modifiedBy) throws Exception;
 
 	public List<StockMaster> getAllStocksWithPostiveQuantity() throws Exception;
 
-	public String addStockTrack(StockTrack stocktrack) throws Exception;
+	public void addStockTrack(StockTrack stocktrack) throws Exception;
 
 }
