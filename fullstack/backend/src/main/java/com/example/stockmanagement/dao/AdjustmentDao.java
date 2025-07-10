@@ -4,20 +4,23 @@ import java.util.List;
 
 import com.example.stockmanagement.domain.Adjustment;
 import com.example.stockmanagement.domain.AdjustmentDetail;
+import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.utilities.Status;
 
 public interface AdjustmentDao {
 
-	boolean addAdjustmentDetails(AdjustmentDetail adjustment);
+	public void addAdjustmentDetails(List<AdjustmentDetail> adjustmentsToBeAdded) throws StockManagementException;
 
-	List<AdjustmentDetail> getAdjustmentDetails(int adjustmentId);
+	public void updateGeneratedBatchId(Long adjustmentId, Long batchId, Long generatedBid)
+			throws StockManagementException;
 
-	boolean updateGeneratedBatchId(long adjustmentId, long batchId, long generatedBid);
+	void addAdjustment(Adjustment adjustmentHeader) throws StockManagementException;
 
-	boolean addAdjustment(Adjustment adjustmentHeader);
+	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException;
 
-	boolean updateAdjustment(int adjustmentId, Status status, String modifiedBy);
+	public List<Adjustment> getAdjustments() throws StockManagementException;
+	
+	public Adjustment getAdjustmentById(long adjustmentId);
 
-	List<Adjustment> getAdjustments();
-
+	public List<AdjustmentDetail> getAdjustmentDetails(long adjustmentId) throws StockManagementException;
 }

@@ -13,6 +13,10 @@ public class StockMaster {
 	private Date createdAt;
 	private String modifiedBy;
 	private Date modifiedAt;
+	
+	public StockMaster() {
+		super();
+	}
 	public StockMaster(String productId, String batch, Long batchId, Integer quantity, Date expiryDate, Double mrp,
 			String createdBy, Date createdAt, String modifiedBy, Date modifiedAt) {
 		super();

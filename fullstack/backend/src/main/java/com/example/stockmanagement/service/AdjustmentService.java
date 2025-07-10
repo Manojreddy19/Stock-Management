@@ -3,13 +3,16 @@ package com.example.stockmanagement.service;
 import java.util.List;
 
 import com.example.stockmanagement.domain.Adjustment;
+import com.example.stockmanagement.exception.StockManagementException;
+import com.example.stockmanagement.utilities.AdjustmentType;
+import com.example.stockmanagement.utilities.Status;
 
 public interface AdjustmentService {
-	
-	public boolean AddAdjustment(Adjustment adjustment);
 
-	public boolean updateStatus(int adjustmentId, char status);
+	public void addAdjustment(Adjustment adjustment) throws StockManagementException;
 
-	public List<Adjustment> getAdjustmentHeaders();
+	public void updateStatus(Long adjustmentId, Status status, String modifiedBy)
+			throws StockManagementException;
 
+	public List<Adjustment> getAdjustments() throws StockManagementException;
 }

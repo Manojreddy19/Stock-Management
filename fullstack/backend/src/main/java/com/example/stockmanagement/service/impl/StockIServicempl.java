@@ -12,6 +12,7 @@ import com.example.stockmanagement.dao.StockDao;
 import com.example.stockmanagement.domain.Adjustment;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 import com.example.stockmanagement.domain.StockMaster;
+import com.example.stockmanagement.domain.StockTrack;
 import com.example.stockmanagement.service.StockService;
 
 @Service
@@ -24,28 +25,60 @@ public class StockIServicempl implements StockService {
 
 	@Override
 	@Transactional
-	public boolean stockUp(Adjustment adjustmentHeader) {
-		List<AdjustmentDetail> adjustmentDetails = adjustmentHeader.getAdjustmentDetails();
+	public String stockUp(Adjustment adjustmentHeader) throws Exception {
+
+		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
+				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
+
 		for (AdjustmentDetail detail : adjustmentDetails) {
-			long generatedId = stockDao.insertAndSendBackBId(new StockMaster(detail.getProductId(), detail.getBatch(),
-					null, detail.getQuantity(), detail.getExpirydate(), detail.getMrp(),
-					adjustmentHeader.getCreatedBy(), new Date(), "Admin1", new Date()));
-			
+			StockMaster stock = new StockMaster(detail.getProductId(), detail.getBatch(), null, detail.getQuantity(),
+					detail.getExpiryDate(), detail.getMrp(), adjustmentHeader.getCreatedBy(), new Date(), "Admin1",
+					new Date());
+
+			int openingStock = stockDao.getQunatityById(detail.getBatchId());
+
+			long generatedId = stockDao.insertAndSendBackBId(stock);
 
 			adjustmentDao.updateGeneratedBatchId(adjustmentHeader.getAdjustmentId(), detail.getBatchId(), generatedId);
 
+			StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
+					detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
+
+			stockDao.addStock(stockTrack);
+
+		}
+		return "";
+	}
+
+	@Override
+	@Transactional
+	public boolean stockDown(Adjustment adjustmentHeader) throws Exception {
+
+		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
+				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
+		
+		for (AdjustmentDetail detail : adjustmentDetails) {
+
+			int openingStock = stockDao.getQunatityById(detail.getBatchId());
+
+			if (openingStock < detail.getQuantity()) {
+				throw new Exception("Insufficent Stock Quantity");
+			}
+
+			stockDao.modifyStockQuantityByBId(detail.getBatchId(), openingStock - detail.getQuantity(),
+					adjustmentHeader.getModifiedBy());
+
+			StockTrack stockTrack = new StockTrack(detail.getBatchId(), adjustmentHeader.getAdjustmentType(),
+					-detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
+
 		}
 		return true;
+
 	}
 
 	@Override
-	public boolean stockDown(Adjustment adjustmentHeader) {
-		return false;
-	}
-
-	@Override
-	public List<StockMaster> getAllStocks() {
-		return null;
+	public List<StockMaster> getAllStocks() throws Exception {
+		return stockDao.getAllStocksWithPostiveQuantity();
 	}
 
 }

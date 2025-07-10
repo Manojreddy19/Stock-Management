@@ -11,8 +11,14 @@ public class AdjustmentDetail {
 	private Integer quantity;
 	private Double mrp;
 	private Double amount;
-	private Date expirydate;
+	private Date expiryDate;
 	private Long generatedBatchId;
+	
+	
+	
+	public AdjustmentDetail() {
+		super();
+	}
 	public AdjustmentDetail(Long adjustmentId, String productId, String batch, Long batchId, Integer quantity,
 			Double mrp, Double amount, Date expirydate, Long generatedBatchId) {
 		super();
@@ -23,7 +29,7 @@ public class AdjustmentDetail {
 		this.quantity = quantity;
 		this.mrp = mrp;
 		this.amount = amount;
-		this.expirydate = expirydate;
+		this.expiryDate = expirydate;
 		this.generatedBatchId = generatedBatchId;
 	}
 	public Long getAdjustmentId() {
@@ -68,11 +74,11 @@ public class AdjustmentDetail {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-	public Date getExpirydate() {
-		return expirydate;
+	public Date getExpiryDate() {
+		return expiryDate;
 	}
-	public void setExpirydate(Date expirydate) {
-		this.expirydate = expirydate;
+	public void setExpiryDate(Date expirydate) {
+		this.expiryDate = expirydate;
 	}
 	public Long getGeneratedBatchId() {
 		return generatedBatchId;
@@ -80,11 +86,7 @@ public class AdjustmentDetail {
 	public void setGeneratedBatchId(Long generatedBatchId) {
 		this.generatedBatchId = generatedBatchId;
 	}
-	
-	
-	
-	
-	
+		
 	
 }
 

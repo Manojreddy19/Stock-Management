@@ -18,6 +18,11 @@ public class Adjustment {
 	private Date createdAt;
 	private String modifiedBy;
 	private Date modifiedAt;
+	
+
+	public Adjustment() {
+		super();
+	}
 
 	public Adjustment(Long adjustmentId, AdjustmentType adjustmentType, Double amount, Status status, String remarks,
 			List<AdjustmentDetail> adjustmentDetails, String createdBy, Date createdAt, String modifiedBy,

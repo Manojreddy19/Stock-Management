@@ -7,12 +7,12 @@ import com.example.stockmanagement.domain.Adjustment;
 
 import com.example.stockmanagement.domain.StockMaster;
 
-public interface StockService {
+public interface StockService  {
 
-	public boolean stockUp(Adjustment adjustmentHeader);
+	public String stockUp(Adjustment adjustmentHeader) throws Exception;
 
-	public boolean stockDown(Adjustment adjustmentHeader);
+	public boolean stockDown(Adjustment adjustmentHeader) throws Exception;
 
-	public List<StockMaster> getAllStocks();
+	public List<StockMaster> getAllStocks() throws Exception;
 
 }

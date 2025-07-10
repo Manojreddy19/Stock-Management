@@ -16,7 +16,7 @@ public class StockParamterMapper {
 		params.addValue("Quantity", stock.getQuantity());
 		params.addValue("ExpiryDate", stock.getExpiryDate());
 		params.addValue("Mrp", stock.getMrp());
-		params.addValue("CreatedBy", session.getAttribute("username"));
+		params.addValue("CreatedBy", stock.getCreatedBy());
 		return params;
 	}
 	public MapSqlParameterSource mapStockUpdateParameters(Long batchId, int quantity) {
@@ -24,7 +24,7 @@ public class StockParamterMapper {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("BatchId", batchId);
 		params.addValue("Quantity", quantity);
-		params.addValue("ModifiedBy", session.getAttribute("username"));
+		//params.addValue("ModifiedBy", session.getAttribute("username"));
 		return params;
 	}
 	public MapSqlParameterSource mapStockIdParameter(Long batchId) {
