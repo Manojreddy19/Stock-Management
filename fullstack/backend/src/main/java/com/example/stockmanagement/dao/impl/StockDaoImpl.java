@@ -2,13 +2,13 @@ package com.example.stockmanagement.dao.impl;
 
 import java.util.List;
 
-
 import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import com.example.stockmanagement.dao.StockDao;
 import com.example.stockmanagement.dao.queries.StockQueries;
@@ -26,23 +26,23 @@ public class StockDaoImpl extends StockQueries implements StockDao  {
 	StockParamterMapper sotckParameterMapper;
 
 	@Override
-	public Long insertAndSendBackBId(StockMaster stock) {
+	public Long insertAndSendBackBId(StockMaster stock) throws Exception {
 
 		String sql = INSERT_STOCK;
-		MapSqlParameterSource params = sotckParameterMapper.mapStockToParameters(stock);
-		int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		MapSqlParameterSource params = sotckParameterMapper.mapStockParameters(stock);
+		int rowsAffected = namedParameterJdbcTemplate.update(sql, params,keyHolder);
+		
 		if (rowsAffected > 0) {
-			return stock.getBatchId();
+			return keyHolder.getKey().longValue();
 		}
 		throw new Exception("Failed to insert stock record for ProductId: " + stock.getProductId());
 	}
 
-
-
-	public Long getQunatityById(Long bId) throws Exception {
+	public Integer getQunatityById(Long bId) throws Exception {
 		String sql = GET_QUANTITY_BY_ID;
 		MapSqlParameterSource param  = sotckParameterMapper.mapStockIdParameter( bId);
-		Long quantity = namedParameterJdbcTemplate.queryForObject(sql,, Long.class);
+		Integer quantity = namedParameterJdbcTemplate.queryForObject(sql,param, Integer.class);
 		if (quantity != null) {
 			return quantity;
 		}	
@@ -51,12 +51,12 @@ public class StockDaoImpl extends StockQueries implements StockDao  {
 	}
 
 	@Override
-	public Boolean modifyStockQuantityByBId(Long bId, int qunatity) throws Exception {
+	public String modifyStockQuantityByBId(Long bId, int qunatity,String modifiedBy) throws Exception {
 		String sql = MODIFY_STOCK_QUANTITY_BY_ID;
-		MapSqlParameterSource params = sotckParameterMapper.mapStockUpdateParameters(bId, qunatity);
+		MapSqlParameterSource params = sotckParameterMapper.mapStockUpdateParameters(bId, qunatity,modifiedBy);
 		int flag = namedParameterJdbcTemplate.update(sql, params);
 		if (flag > 0) {
-			return true;
+			return "stock is modified succesfully!";
 		}
 		throw new Exception("Failed to modify stock quantity for BatchId: " + bId);
 	}
@@ -73,9 +73,15 @@ public class StockDaoImpl extends StockQueries implements StockDao  {
 	}
 
 	@Override
-	public boolean addStock(StockTrack stocktrack) {
-		// TODO Auto-generated method stub
-		return false;
+	public String addStockTrack(StockTrack stocktrack) throws Exception {
+		
+		String sql= INSERT_INTO_STACK_TRACK;
+		MapSqlParameterSource params = sotckParameterMapper.mapStockTrackParameters(stocktrack);
+		int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
+		if (rowsAffected > 0) {
+			return "stock track is added";
+		}
+		throw new Exception("Failed to insert stockTrack ");
 	}
 
 }
