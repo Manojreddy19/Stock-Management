@@ -44,7 +44,7 @@ public class StockIServicempl implements StockService {
 			StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
 					detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
 
-			stockDao.addStock(stockTrack);
+			stockDao.addStockTrack(stockTrack);
 
 		}
 		return "";
@@ -56,7 +56,7 @@ public class StockIServicempl implements StockService {
 
 		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
 				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
-		
+
 		for (AdjustmentDetail detail : adjustmentDetails) {
 
 			int openingStock = stockDao.getQunatityById(detail.getBatchId());

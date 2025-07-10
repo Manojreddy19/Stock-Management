@@ -23,10 +23,9 @@ public class StaticHelperForAdjustment {
 
 	public static MapSqlParameterSource getParamsToUpdateOnApproval(Adjustment adjustment) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("AdjustmentId", adjustment.getAdjustmentId());
-		params.addValue("AdjustmentType", adjustment.getAdjustmentType());
+		params.addValue("AdjustmentType",  String.valueOf(adjustment.getAdjustmentType().getValue()));
 		params.addValue("Amount", adjustment.getAmount());
-		params.addValue("Status", adjustment.getStatus());
+		params.addValue("Status",  String.valueOf(adjustment.getStatus().getValue()));
 		params.addValue("Remarks", adjustment.getRemarks());
 		params.addValue("CreatedBy", adjustment.getCreatedBy());
 		params.addValue("ModifiedBy", adjustment.getModifiedBy());

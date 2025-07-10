@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import com.example.stockmanagement.dao.StockDao;
 import com.example.stockmanagement.dao.queries.StockQueries;
@@ -16,6 +17,7 @@ import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.utilities.StockMapper;
 import com.example.stockmanagement.utilities.StockParameterMapper;
 
+@Repository
 public class StockDaoImpl extends StockQueries implements StockDao {
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -62,8 +64,17 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	@Override
 	public List<StockMaster> getAllStocksWithPostiveQuantity() throws StockManagementException {
 		String sql = GET_ALL_STOCKS_WITH_POSITIVE_QUANTITY;
-		List<StockMaster> stocks = namedParameterJdbcTemplate.query(sql, new MapSqlParameterSource(),
-				new StockMapper());
+		List<StockMaster> stocks =null;
+		System.out.println("In DAO");
+		try {
+			stocks = namedParameterJdbcTemplate.query(sql, new StockMapper());
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		System.out.println(stocks);
 		if (stocks != null && !stocks.isEmpty()) {
 			return stocks;
 		}

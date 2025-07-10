@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.stockmanagement.domain.Adjustment;
@@ -20,6 +21,7 @@ import com.example.stockmanagement.service.StockService;
 import com.example.stockmanagement.utilities.Status;
 
 @RestController
+@RequestMapping("/api")
 public class AdjustmentController {
 	@Autowired
 	AdjustmentService adjustmentService;
@@ -30,11 +32,12 @@ public class AdjustmentController {
 	@PostMapping("/addAdjustment")
 	public ResponseEntity<Response> addAdjustment(@RequestBody Adjustment adjustment) {
 		try {
+			System.out.println(adjustment);
 			adjustmentService.addAdjustment(adjustment);
 
-		} catch (Exception e) {
+		} catch (StockManagementException e) {
 			Response response = new Response("400", e.getMessage());
-			return ResponseEntity.status(201).body(response);
+			return ResponseEntity.status(500).body(response);
 
 		}
 		Response response = new Response("201", "Adjustment Added Successfully");
@@ -60,8 +63,10 @@ public class AdjustmentController {
 	public ResponseEntity<List<StockMaster>> getStock() {
 
 		List<StockMaster> stock = null;
+		System.out.println("HEYYYYYY"+stock);
 		try {
 			stock = stockService.getAllStocks();
+			System.out.println(stock);
 
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(null);

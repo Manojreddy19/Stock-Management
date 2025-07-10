@@ -16,6 +16,12 @@ public class AdjustmentDetail {
 	
 	
 	
+	@Override
+	public String toString() {
+		return "AdjustmentDetail [adjustmentId=" + adjustmentId + ", productId=" + productId + ", batch=" + batch
+				+ ", batchId=" + batchId + ", quantity=" + quantity + ", mrp=" + mrp + ", amount=" + amount
+				+ ", expiryDate=" + expiryDate + ", generatedBatchId=" + generatedBatchId + "]";
+	}
 	public AdjustmentDetail() {
 		super();
 	}

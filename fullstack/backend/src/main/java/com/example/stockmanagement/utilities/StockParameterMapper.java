@@ -1,12 +1,12 @@
 package com.example.stockmanagement.utilities;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.stereotype.Component;
 
 import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
 
-@Configuration
+@Component
 public class StockParameterMapper {
 
 	public MapSqlParameterSource mapStockParameters(StockMaster stock) {

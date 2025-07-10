@@ -121,4 +121,14 @@ public class Adjustment {
 		this.modifiedAt = modifiedAt;
 	}
 
+	@Override
+	public String toString() {
+		return "Adjustment [adjustmentId=" + adjustmentId + ", adjustmentType=" + adjustmentType + ", amount=" + amount
+				+ ", status=" + status + ", remarks=" + remarks + ", adjustmentDetails=" + adjustmentDetails
+				+ ", createdBy=" + createdBy + ", createdAt=" + createdAt + ", modifiedBy=" + modifiedBy
+				+ ", modifiedAt=" + modifiedAt + "]";
+	}
+	
+	
+
 }
