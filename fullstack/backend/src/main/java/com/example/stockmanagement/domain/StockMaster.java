@@ -27,10 +27,6 @@ public class StockMaster {
 		this.modifiedBy = modifiedBy;
 		this.modifiedAt = modifiedAt;
 	}
-	public StockMaster() {
-
-	}
-	
 	public String getProductId() {
 		return productId;
 	}

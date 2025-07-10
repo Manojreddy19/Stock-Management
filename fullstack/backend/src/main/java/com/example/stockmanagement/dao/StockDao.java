@@ -6,14 +6,14 @@ import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
 
 public interface StockDao {
-	public Long insertAndSendBackBId(StockMaster stock) throws Exception;
+	public Long insertAndSendBackBId(StockMaster stock);
 
-	public Integer getQunatityById(Long bId) throws Exception;
+	public Long getQunatityById(Long bId) throws Exception;
 
-	public void modifyStockQuantityByBId(Long bId, int qunatity, String modifiedBy) throws Exception;
+	public Boolean modifyStockQuantityByBId(Long bId, int qunatity) throws Exception;
 
 	public List<StockMaster> getAllStocksWithPostiveQuantity() throws Exception;
 
-	public void addStockTrack(StockTrack stocktrack) throws Exception;
+	boolean addStock(StockTrack stocktrack);
 
 }

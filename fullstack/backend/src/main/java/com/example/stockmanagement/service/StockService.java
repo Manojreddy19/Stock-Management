@@ -9,7 +9,7 @@ import com.example.stockmanagement.domain.StockMaster;
 
 public interface StockService {
 
-	public boolean stockUp(Adjustment adjustmentHeader) throws Exception;
+	public boolean stockUp(Adjustment adjustmentHeader);
 
 	public boolean stockDown(Adjustment adjustmentHeader);
 
