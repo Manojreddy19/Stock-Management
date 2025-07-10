@@ -32,5 +32,10 @@ public class StaticHelperForAdjustment {
 		params.addValue("ModifiedBy", adjustment.getModifiedBy());
 		return params;
 	}
+	public static MapSqlParameterSource getParamsToAdjustmentId(Long adjustmentId) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("adjustmentId", adjustmentId);
+		return params;
+	}
 
 }

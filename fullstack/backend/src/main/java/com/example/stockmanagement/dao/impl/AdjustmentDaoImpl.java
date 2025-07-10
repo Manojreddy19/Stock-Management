@@ -70,10 +70,10 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	}
 
 	@Override
-	public Adjustment getAdjustmentById(long adjustmentId) {
-		return null;
-		// TODO Auto-generated method stub
+	public Adjustment getAdjustmentById(long adjustmentId) throws StockManagementException{
 		
-	}
+		MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToAdjustmentId(adjustmentId);
+		return namedParameterJdbcTemplate.queryForObject(SELECT_ALL_ADJUSTMENTS_BY_ID,params,new AdjustmentRowMapper());
+}
 
 }

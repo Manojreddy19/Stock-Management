@@ -7,4 +7,5 @@ public class AdjustmentQueries {
 	protected String SELECT_ALL_ADJUSTMENTS = "SELECT * FROM tbl_adjustment_header";
 	protected String UPDATE_BATCHID_AND_GENERATEDBID = "UPDATE tbl_adjustment_details SET generatedBid=:generatedBid WHERE adjustmentId=:adjustmentId AND batchId=:batchId";
 	protected String SELECT_ALL_ADJUSTMENT_DETAILS = "SELECT * FROM tbl_adjustment_details";
+	protected String SELECT_ALL_ADJUSTMENTS_BY_ID="SELECT * FROM tbl_adjustment_header WHERE AdjustmentId = :adjustmentId";
 } 
