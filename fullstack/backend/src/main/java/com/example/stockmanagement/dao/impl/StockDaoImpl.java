@@ -2,6 +2,7 @@ package com.example.stockmanagement.dao.impl;
 
 import java.util.List;
 
+
 import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class StockDaoImpl extends StockQueries implements StockDao  {
 	StockParamterMapper sotckParameterMapper;
 
 	@Override
-	public Long InsertAndSendBackBId(StockMaster stock) {
+	public Long insertAndSendBackBId(StockMaster stock) {
 
 		String sql = INSERT_STOCK;
 		MapSqlParameterSource params = sotckParameterMapper.mapStockToParameters(stock);
@@ -34,10 +35,10 @@ public class StockDaoImpl extends StockQueries implements StockDao  {
 			return stock.getBatchId();
 		}
 		throw new Exception("Failed to insert stock record for ProductId: " + stock.getProductId());
-		return null;
 	}
 
-	@Override
+
+
 	public Long getQunatityById(Long bId) throws Exception {
 		String sql = GET_QUANTITY_BY_ID;
 		MapSqlParameterSource param  = sotckParameterMapper.mapStockIdParameter( bId);
@@ -68,6 +69,7 @@ public class StockDaoImpl extends StockQueries implements StockDao  {
 			return stocks;
 		}
 		throw new Exception("no stocks found with positive quantity");
+
 	}
 
 	@Override
