@@ -1,13 +1,10 @@
 package com.example.stockmanagement.domain;
 
-
 import java.util.Date;
-
 
 public class StockMaster {
 	private String productId;
 	private String batch;
-
 	private Long BatchId;
 	private Integer quantity;
 	private Date expiryDate;
@@ -93,7 +90,4 @@ public class StockMaster {
 	
 	
 
-	
 }
-
-
