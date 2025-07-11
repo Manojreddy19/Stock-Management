@@ -25,7 +25,6 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 	@Override
 	@Transactional
 	public void addAdjustment(Adjustment adjustment) throws StockManagementException {
-		System.out.println("In add adjustment service");
 		try {
 			long id = adjustmentDao.addAdjustment(adjustment);
 			adjustmentDao.addAdjustmentDetails(id, adjustment.getAdjustmentDetails());
@@ -37,6 +36,7 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 	}
 
 	@Override
+	@Transactional
 	public void updateStatus(Long adjustmentId, Status status, String modifiedBy)
 			throws StockManagementException {
 		

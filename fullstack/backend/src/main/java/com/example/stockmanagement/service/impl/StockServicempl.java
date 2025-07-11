@@ -3,6 +3,8 @@ package com.example.stockmanagement.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +19,9 @@ import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.service.StockService;
 
 @Service
-public class StockIServicempl implements StockService {
+public class StockServicempl implements StockService {
+
+	private static final Logger log = LoggerFactory.getLogger(StockServicempl.class);
 
 	@Autowired
 	private StockDao stockDao;
@@ -30,16 +34,15 @@ public class StockIServicempl implements StockService {
 
 		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
 				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
-		System.out.println("In stock Up");
+		log.info("In stock Up");
 		System.out.println(adjustmentDetails);
 
 		for (AdjustmentDetail detail : adjustmentDetails) {
 			StockMaster stock = new StockMaster(detail.getProductId(), detail.getBatch(), null, detail.getQuantity(),
 					detail.getExpiryDate(), detail.getMrp(), adjustmentHeader.getCreatedBy(), new Date(), "Admin1",
 					new Date());
-			System.out.println("before quantitiyDao "+detail.getBatchId());
+			log.info("before quantitiyDao "+detail.getBatchId());
 			int openingStock = stockDao.getQunatityById(detail.getBatchId());
-			System.out.println("after quantitiyDao");
 			long generatedId = stockDao.insertAndSendBackBId(stock);
 			System.out.println("After stockDao.insertAndSendBackBId(stock)");
 
@@ -48,9 +51,9 @@ public class StockIServicempl implements StockService {
 			System.out.println("After updateGeneratedBatchId(");
 			StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
 					detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
-
 			stockDao.addStockTrack(stockTrack);
-			System.out.println("After Stock Track");
+			log.info("After Stock Track");
+
 			
 
 		}

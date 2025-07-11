@@ -30,7 +30,7 @@ public class StaticHelperForAdjustment {
 		params.addValue("AdjustmentId", adjustment.getAdjustmentId());
 		params.addValue("adjustmentType", String.valueOf( adjustment.getAdjustmentType().getValue()));
 		params.addValue("Amount", adjustment.getAmount());
-		params.addValue("Status", String.valueOf( adjustment.getStatus().getValue()));
+		params.addValue("Status", "O");
 		params.addValue("Remarks", adjustment.getRemarks());
 		params.addValue("CreatedBy", adjustment.getCreatedBy());
 		params.addValue("ModifiedBy", adjustment.getModifiedBy());

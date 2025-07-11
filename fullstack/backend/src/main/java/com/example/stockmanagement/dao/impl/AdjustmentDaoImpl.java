@@ -28,11 +28,9 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	@Override
 	public long addAdjustment(Adjustment adjustment) throws StockManagementException {
 		MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToUpdateOnApproval(adjustment);
-		int insertedCount = 0;
 		try {
 			KeyHolder keyHolder = new GeneratedKeyHolder();
-			insertedCount = namedParameterJdbcTemplate.update(INSERT_INTO_ADJUSTMENT_HEADER, params, keyHolder);
-			System.out.println(insertedCount);
+			namedParameterJdbcTemplate.update(INSERT_INTO_ADJUSTMENT_HEADER, params, keyHolder);
 			return keyHolder.getKey().longValue();
 		} catch (Exception e) {
 			e.printStackTrace();
