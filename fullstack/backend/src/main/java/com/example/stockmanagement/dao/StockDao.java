@@ -13,7 +13,7 @@ public interface StockDao {
 
 	public void modifyStockQuantityByBId(Long bId, int qunatity, String modifiedBy) throws StockManagementException;
 
-	public List<StockMaster> getAllStocksWithPostiveQuantity() throws StockManagementException;
+	public List<StockMaster> getAllStocks() throws StockManagementException;
 
 	public void addStockTrack(StockTrack stocktrack) throws StockManagementException;
 

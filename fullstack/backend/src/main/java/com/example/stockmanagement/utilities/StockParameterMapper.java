@@ -24,11 +24,11 @@ public class StockParameterMapper {
 	public MapSqlParameterSource mapStockTrackParameters(StockTrack stockTrack) {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("batchId", stockTrack.getBatchId());
-		params.addValue("transactionType", stockTrack.getTransactionType());
-		params.addValue("quantity", stockTrack.getQuantity());
-		params.addValue("openStock", stockTrack.getOpenStock());
-		params.addValue("createdBy", stockTrack.getCreatedBy());
+		params.addValue("BatchId", stockTrack.getBatchId());
+		params.addValue("TransactionType", String.valueOf( stockTrack.getTransactionType().getValue()));
+		params.addValue("Quantity", stockTrack.getQuantity());
+		params.addValue("OpenStock", stockTrack.getOpenStock());
+		params.addValue("CreatedBy", stockTrack.getCreatedBy());
 		return params;
 	}
 
@@ -44,7 +44,7 @@ public class StockParameterMapper {
 	public MapSqlParameterSource mapStockIdParameter(Long batchId) {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("batchId", batchId);
+		params.addValue("BatchId", batchId);
 		return params;
 	}
 

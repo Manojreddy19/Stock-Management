@@ -13,9 +13,37 @@ public class AdjustmentRowMapper implements RowMapper<Adjustment> {
 	public Adjustment mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Adjustment adjustment = new Adjustment();
 		adjustment.setAdjustmentId(rs.getLong("AdjustmentId"));
-		adjustment.setAdjustmentType(AdjustmentType.valueOf(rs.getString("AdjustmentType")));
+		
+		char adj= rs.getString("AdjustmentType").charAt(0);
+		if(adj=='U') {
+			adjustment.setAdjustmentType(AdjustmentType.valueOf("UP"));
+			System.out.println("In Up RowMapper");
+			
+		}
+		else {
+			adjustment.setAdjustmentType(AdjustmentType.valueOf("DOWN"));
+			
+		}
+		char sta=rs.getString("Status").charAt(0);
+		if(sta=='O')
+		{
+			adjustment.setStatus(Status.OPEN);
+			
+		}
+		else if(sta=='A')
+		{
+			adjustment.setStatus(Status.ACCEPT);
+			
+		}
+		else
+		{
+			adjustment.setStatus(Status.REJECT);
+			
+		}
+		
 		adjustment.setAmount(rs.getDouble("Amount"));
-		adjustment.setStatus(Status.valueOf( rs.getString("Status")));
+		
+		
 		adjustment.setRemarks(rs.getString("Remarks"));
 		adjustment.setCreatedBy(rs.getString("CreatedBy"));
 		adjustment.setCreatedAt(rs.getTimestamp("CreatedAt"));

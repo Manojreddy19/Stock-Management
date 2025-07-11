@@ -40,9 +40,13 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 			throws StockManagementException {
 		
 		try {
+			System.out.println(" status value "+status.getValue());
 			Adjustment adjustment=adjustmentDao.getAdjustmentById(adjustmentId);
-			if (Status.ACCEPT == status) {
+			System.out.println("After getting adjustment");
+			if (status.getValue()=='A') {
+				System.out.println("In updateStatus start");
 				adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy);
+				System.out.println("After Adjustment DAO");
 				if (adjustment.getAdjustmentType() == AdjustmentType.UP) {
 					stockService.stockUp(adjustment);
 				} else {
@@ -62,6 +66,10 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 
 		try {
 			List<Adjustment> adjustments = adjustmentDao.getAdjustments();
+			for(Adjustment adj:adjustments)
+			{
+				adj.setAdjustmentDetails(adjustmentDao.getAdjustmentDetails(adj.getAdjustmentId()));
+			}
 			return adjustments;
 		} catch (Exception e) {
 			throw new StockManagementException("error occured");

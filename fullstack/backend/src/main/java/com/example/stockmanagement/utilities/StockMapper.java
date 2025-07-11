@@ -12,7 +12,6 @@ public class StockMapper implements RowMapper<StockMaster> {
 	@Override
 	public StockMaster mapRow(ResultSet rs, int rowNum) throws SQLException {
 		StockMaster stock = new StockMaster();
-		System.out.println(rs);
 		stock.setProductId(rs.getString("ProductId"));
 		stock.setBatch(rs.getString("Batch"));
 		stock.setBatchId(rs.getLong("BatchId"));

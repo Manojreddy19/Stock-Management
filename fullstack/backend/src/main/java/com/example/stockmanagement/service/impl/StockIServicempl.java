@@ -29,24 +29,30 @@ public class StockIServicempl implements StockService {
 
 		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
 				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
+		System.out.println("In stock Up");
+		System.out.println(adjustmentDetails);
 
 		for (AdjustmentDetail detail : adjustmentDetails) {
 			StockMaster stock = new StockMaster(detail.getProductId(), detail.getBatch(), null, detail.getQuantity(),
 					detail.getExpiryDate(), detail.getMrp(), adjustmentHeader.getCreatedBy(), new Date(), "Admin1",
 					new Date());
-
+			System.out.println("before quantitiyDao "+detail.getBatchId());
 			int openingStock = stockDao.getQunatityById(detail.getBatchId());
-
+			System.out.println("after quantitiyDao");
 			long generatedId = stockDao.insertAndSendBackBId(stock);
+			System.out.println("After stockDao.insertAndSendBackBId(stock)");
 
 			adjustmentDao.updateGeneratedBatchId(adjustmentHeader.getAdjustmentId(), detail.getBatchId(), generatedId);
-
+			System.out.println("After updateGeneratedBatchId(");
 			StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
 					detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
 
 			stockDao.addStockTrack(stockTrack);
+			System.out.println("After Stock Track");
+			
 
 		}
+		System.out.println("In stock Up end");
 		return "";
 	}
 
@@ -78,7 +84,7 @@ public class StockIServicempl implements StockService {
 
 	@Override
 	public List<StockMaster> getAllStocks() throws Exception {
-		return stockDao.getAllStocksWithPostiveQuantity();
+		return stockDao.getAllStocks();
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -59,14 +60,13 @@ public class AdjustmentController {
 
 	}
 
-	@GetMapping("/getStock")
-	public ResponseEntity<List<StockMaster>> getStock() {
+	@CrossOrigin(origins ="*")
+	@GetMapping("/getStocks")
+	public ResponseEntity<List<StockMaster>> getStocks() {
 
 		List<StockMaster> stock = null;
-		System.out.println("HEYYYYYY"+stock);
 		try {
 			stock = stockService.getAllStocks();
-			System.out.println(stock);
 
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(null);
@@ -82,6 +82,7 @@ public class AdjustmentController {
 			long adjustmentId = Long.parseLong(requestParameters.get("adjustmentId"));
 			String statusChar = requestParameters.get("status");
 			Status status = Status.valueOf(statusChar);
+			System.out.println("In controller "+status+" "+adjustmentId);
 			adjustmentService.updateStatus(adjustmentId, status, "Admin");
 
 		} catch (Exception e) {

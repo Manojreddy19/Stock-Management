@@ -7,17 +7,18 @@ import com.example.stockmanagement.domain.Adjustment;
 public class StaticHelperForAdjustment {
 	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Status status, String modifiedBy) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("adjustmentId", adjustmentId);
-		params.addValue("status", status);
-		params.addValue("modifiedBy", modifiedBy);
+		params.addValue("AdjustmentId", adjustmentId);
+		System.out.println("Status Value "+status.getValue());
+		params.addValue("Status", String.valueOf(status.getValue()));
+		params.addValue("ModifiedBy", modifiedBy);
 		return params;
 	}
 
 	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Long batchId, Long generatedBid) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("adjustmentId", adjustmentId);
-		params.addValue("batchId", batchId);
-		params.addValue("generatedBid", generatedBid);
+		params.addValue("AdjustmentId", adjustmentId);
+		params.addValue("BatchId", batchId);
+		params.addValue("GeneratedBid", generatedBid);
 		return params;
 	}
 

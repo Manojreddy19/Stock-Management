@@ -27,24 +27,35 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 
 	@Override
 	public Long insertAndSendBackBId(StockMaster stock) throws StockManagementException {
+		try {
+			String sql = INSERT_STOCK;
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			MapSqlParameterSource params = stockParameterMapper.mapStockParameters(stock);
+			int rowsAffected = namedParameterJdbcTemplate.update(sql, params, keyHolder);
 
-		String sql = INSERT_STOCK;
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		MapSqlParameterSource params = stockParameterMapper.mapStockParameters(stock);
-		int rowsAffected = namedParameterJdbcTemplate.update(sql, params, keyHolder);
+			if (rowsAffected > 0) {
+				return keyHolder.getKey().longValue();
+			}
 
-		if (rowsAffected > 0) {
-			return keyHolder.getKey().longValue();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		throw new StockManagementException("Failed to insert stock record for ProductId: " + stock.getProductId());
 	}
 
 	public Integer getQunatityById(Long bId) throws StockManagementException {
-		String sql = GET_QUANTITY_BY_ID;
-		MapSqlParameterSource param = stockParameterMapper.mapStockIdParameter(bId);
-		Integer quantity = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
-		if (quantity != null) {
-			return quantity;
+		try {
+			String sql = GET_QUANTITY_BY_ID;
+			System.out.println();
+			MapSqlParameterSource param = stockParameterMapper.mapStockIdParameter(bId);
+			Integer quantity = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
+			if (quantity != null) {
+				return quantity;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		throw new StockManagementException("No stock found with BatchId: " + bId);
@@ -62,13 +73,11 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	}
 
 	@Override
-	public List<StockMaster> getAllStocksWithPostiveQuantity() throws StockManagementException {
+	public List<StockMaster> getAllStocks() throws StockManagementException {
 		String sql = GET_ALL_STOCKS_WITH_POSITIVE_QUANTITY;
-		List<StockMaster> stocks =null;
-		System.out.println("In DAO");
+		List<StockMaster> stocks = null;
 		try {
 			stocks = namedParameterJdbcTemplate.query(sql, new StockMapper());
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,12 +94,20 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	@Override
 	public void addStockTrack(StockTrack stocktrack) throws StockManagementException {
 
-		String sql = INSERT_INTO_STOCK_TRACK;
-		MapSqlParameterSource params = stockParameterMapper.mapStockTrackParameters(stocktrack);
-		int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
-		if (rowsAffected > 0) {
-			return;
+		try {
+			String sql = INSERT_INTO_STOCK_TRACK;
+			MapSqlParameterSource params = stockParameterMapper.mapStockTrackParameters(stocktrack);
+			int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
+			System.out.println("Rows Effected in DAO "+rowsAffected);
+			if (rowsAffected > 0) {
+				
+				return;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		throw new StockManagementException("Failed to insert stockTrack ");
 	}
 
