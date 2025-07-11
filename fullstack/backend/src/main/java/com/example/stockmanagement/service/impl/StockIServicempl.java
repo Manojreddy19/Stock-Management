@@ -13,6 +13,7 @@ import com.example.stockmanagement.domain.Adjustment;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
+import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.service.StockService;
 
 @Service
@@ -25,7 +26,7 @@ public class StockIServicempl implements StockService {
 
 	@Override
 	@Transactional
-	public String stockUp(Adjustment adjustmentHeader) throws Exception {
+	public String stockUp(Adjustment adjustmentHeader) throws StockManagementException {
 
 		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
 				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
@@ -43,6 +44,7 @@ public class StockIServicempl implements StockService {
 			System.out.println("After stockDao.insertAndSendBackBId(stock)");
 
 			adjustmentDao.updateGeneratedBatchId(adjustmentHeader.getAdjustmentId(), detail.getBatchId(), generatedId);
+			
 			System.out.println("After updateGeneratedBatchId(");
 			StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
 					detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
@@ -58,7 +60,7 @@ public class StockIServicempl implements StockService {
 
 	@Override
 	@Transactional
-	public boolean stockDown(Adjustment adjustmentHeader) throws Exception {
+	public boolean stockDown(Adjustment adjustmentHeader) throws StockManagementException {
 
 		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
 				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
@@ -68,7 +70,7 @@ public class StockIServicempl implements StockService {
 			int openingStock = stockDao.getQunatityById(detail.getBatchId());
 
 			if (openingStock < detail.getQuantity()) {
-				throw new Exception("Insufficent Stock Quantity");
+				throw new StockManagementException("Insufficent Stock Quantity");
 			}
 
 			stockDao.modifyStockQuantityByBId(detail.getBatchId(), openingStock - detail.getQuantity(),
@@ -76,6 +78,7 @@ public class StockIServicempl implements StockService {
 
 			StockTrack stockTrack = new StockTrack(detail.getBatchId(), adjustmentHeader.getAdjustmentType(),
 					-detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
+			stockDao.addStockTrack(stockTrack);
 
 		}
 		return true;
@@ -83,7 +86,7 @@ public class StockIServicempl implements StockService {
 	}
 
 	@Override
-	public List<StockMaster> getAllStocks() throws Exception {
+	public List<StockMaster> getAllStocks() throws StockManagementException {
 		return stockDao.getAllStocks();
 	}
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.example.stockmanagement.domain.Adjustment;
 import com.example.stockmanagement.exception.StockManagementException;
-import com.example.stockmanagement.utilities.AdjustmentType;
 import com.example.stockmanagement.utilities.Status;
 
 public interface AdjustmentService {

@@ -63,12 +63,20 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 
 	@Override
 	public void modifyStockQuantityByBId(Long bId, int qunatity, String modifiedBy) throws StockManagementException {
-		String sql = MODIFY_STOCK_QUANTITY_BY_ID;
-		MapSqlParameterSource params = stockParameterMapper.mapStockUpdateParameters(bId, qunatity, modifiedBy);
-		int flag = namedParameterJdbcTemplate.update(sql, params);
-		if (flag > 0) {
-			return;
+		try
+		{
+			String sql = MODIFY_STOCK_QUANTITY_BY_ID;
+			MapSqlParameterSource params = stockParameterMapper.mapStockUpdateParameters(bId, qunatity, modifiedBy);
+			int flag = namedParameterJdbcTemplate.update(sql, params);
+			if (flag > 0) {
+				return;
+			}
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
 		}
+		
 		throw new StockManagementException("Failed to modify stock quantity for BatchId: " + bId);
 	}
 
@@ -98,9 +106,9 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 			String sql = INSERT_INTO_STOCK_TRACK;
 			MapSqlParameterSource params = stockParameterMapper.mapStockTrackParameters(stocktrack);
 			int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
-			System.out.println("Rows Effected in DAO "+rowsAffected);
+			System.out.println("Rows Effected in DAO " + rowsAffected);
 			if (rowsAffected > 0) {
-				
+
 				return;
 			}
 

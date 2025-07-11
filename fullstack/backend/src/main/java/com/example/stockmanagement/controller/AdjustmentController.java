@@ -3,6 +3,8 @@ package com.example.stockmanagement.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,58 +33,61 @@ public class AdjustmentController {
 	StockService stockService;
 
 	@PostMapping("/addAdjustment")
-	public ResponseEntity<Response> addAdjustment(@RequestBody Adjustment adjustment) {
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<Response> addAdjustment(@RequestBody @Valid Adjustment adjustment) {
 		try {
 			System.out.println(adjustment);
 			adjustmentService.addAdjustment(adjustment);
+			Response response = new Response("201", "Adjustment Added Successfully");
+
+			return ResponseEntity.status(201).body(response);
 
 		} catch (StockManagementException e) {
 			Response response = new Response("400", e.getMessage());
 			return ResponseEntity.status(500).body(response);
 
 		}
-		Response response = new Response("201", "Adjustment Added Successfully");
-
-		return ResponseEntity.status(201).body(response);
 
 	}
 
 	@GetMapping("/getAdjustments")
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<List<Adjustment>> getAdjustments() {
 		List<Adjustment> adjustments = null;
 		try {
 			adjustments = adjustmentService.getAdjustments();
+			return ResponseEntity.status(200).body(adjustments);
 		} catch (StockManagementException e) {
 			return ResponseEntity.status(500).body(null);
 
 		}
-		return ResponseEntity.status(200).body(adjustments);
 
 	}
 
-	@CrossOrigin(origins ="*")
+	@CrossOrigin(origins = "*")
 	@GetMapping("/getStocks")
 	public ResponseEntity<List<StockMaster>> getStocks() {
 
 		List<StockMaster> stock = null;
 		try {
 			stock = stockService.getAllStocks();
+			return ResponseEntity.status(200).body(stock);
 
-		} catch (Exception e) {
+		} catch (StockManagementException e) {
 			return ResponseEntity.status(500).body(null);
 
 		}
-		return ResponseEntity.status(200).body(stock);
 
 	}
 
 	@PutMapping("/updateStatus")
+	@CrossOrigin(origins = "*")
 	public ResponseEntity<Response> updateStatus(@RequestBody Map<String, String> requestParameters) {
 		try {
 			long adjustmentId = Long.parseLong(requestParameters.get("adjustmentId"));
 			String statusChar = requestParameters.get("status");
 			Status status = Status.valueOf(statusChar);
-			System.out.println("In controller "+status+" "+adjustmentId);
+			System.out.println("In controller " + status + " " + adjustmentId);
 			adjustmentService.updateStatus(adjustmentId, status, "Admin");
 
 		} catch (Exception e) {

@@ -9,12 +9,12 @@ import com.example.stockmanagement.utilities.Status;
 
 public interface AdjustmentDao {
 
-	public void addAdjustmentDetails(List<AdjustmentDetail> adjustmentsToBeAdded) throws StockManagementException;
+	void addAdjustmentDetails(long id, List<AdjustmentDetail> adjustment) throws StockManagementException;
 
 	public void updateGeneratedBatchId(Long adjustmentId, Long batchId, Long generatedBid)
 			throws StockManagementException;
 
-	void addAdjustment(Adjustment adjustmentHeader) throws StockManagementException;
+	long addAdjustment(Adjustment adjustmentHeader) throws StockManagementException;
 
 	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException;
 

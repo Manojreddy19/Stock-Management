@@ -35,7 +35,7 @@ public class StockParameterMapper {
 	public MapSqlParameterSource mapStockUpdateParameters(Long batchId, int quantity, String modifiedBy) {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("batchId", batchId);
+		params.addValue("BatchId", batchId);
 		params.addValue("quantity", quantity);
 		params.addValue("modifiedBy", modifiedBy);
 		return params;

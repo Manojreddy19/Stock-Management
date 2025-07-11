@@ -3,17 +3,33 @@ package com.example.stockmanagement.domain;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import com.example.stockmanagement.utilities.AdjustmentType;
 import com.example.stockmanagement.utilities.Status;
 
 public class Adjustment {
 
 	private Long adjustmentId;
+	
+	@NotNull(message = "Adjustment Type is required")
 	private AdjustmentType adjustmentType;
+	
+	@NotNull(message="Amount is required")
+	@Min(value = 1, message = "Amount must be positive")
 	private Double amount;
+	
+	@NotNull(message = "Status Type is required")
 	private Status status;
+	
 	private String remarks;
+	
+	@Valid
+	@NotNull(message = "Adjustment Details must not be null")
 	private List<AdjustmentDetail> adjustmentDetails;
+	
 	private String createdBy;
 	private Date createdAt;
 	private String modifiedBy;

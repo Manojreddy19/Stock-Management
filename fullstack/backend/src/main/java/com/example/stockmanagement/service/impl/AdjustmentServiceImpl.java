@@ -25,12 +25,13 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 	@Override
 	@Transactional
 	public void addAdjustment(Adjustment adjustment) throws StockManagementException {
-
+		System.out.println("In add adjustment service");
 		try {
-			adjustmentDao.addAdjustment(adjustment);
-			adjustmentDao.addAdjustmentDetails(adjustment.getAdjustmentDetails());
+			long id = adjustmentDao.addAdjustment(adjustment);
+			adjustmentDao.addAdjustmentDetails(id, adjustment.getAdjustmentDetails());
 		} catch (Exception e) {
-			throw new StockManagementException("error occured");
+			e.printStackTrace();
+			throw new StockManagementException(e.getMessage());
 		}
 
 	}
