@@ -1,0 +1,42 @@
+table {
+  width: 80%;
+  margin: 20px;
+  border-collapse: collapse;
+   
+}
+th,
+td {
+  padding: 12px;
+  border: 1px solid #999;
+  text-align: left;
+}
+th {
+  background-color: #74a1a1;
+}
+/* #model
+{
+    position:absolute;
+    top:200px;
+    left:200px;
+    background-color: rgb(159, 180, 177);
+    color: black;
+    border-radius: 20px;
+     backdrop-filter: blur(5px);
+}
+#pop-button
+{
+    border-radius: 20%;
+    background-color: rgb(14, 0, 0);
+    position:absolute;
+    top:0px;
+    right:0px;
+} */
+#dashboard-table
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  
+
+}

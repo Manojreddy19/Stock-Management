@@ -24,7 +24,7 @@ public class StockParamterMapper {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("batchId", stockTrack.getBatchId());
-		params.addValue("transaction", stockTrack.getTransactionType());
+		params.addValue("transaction", stockTrack.getTransactionType().);
 		params.addValue("quantity", stockTrack.getQuantity());
 		params.addValue("expiryDate", stockTrack.getOpenStock());
 		params.addValue("createdBy", stockTrack.getCreatedBy());
