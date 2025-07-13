@@ -36,7 +36,7 @@ const filterAdjustmentsByStatus=(status) => {
     toast.success(`Adjustment ${status} successfully!`);
     console.log("Status updated successfully", response.data);
   } catch (error) {
-    toast.error(`Failed to update status: ${error.response?.data?.message || error.message}`);
+    toast.error(`${error.response?.data?.message || 'Failed to update status'}`);
     console.error("Failed to update status", error);
   }
 };
