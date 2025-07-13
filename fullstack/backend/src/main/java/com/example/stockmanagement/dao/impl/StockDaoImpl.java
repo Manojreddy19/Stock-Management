@@ -49,6 +49,7 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 			String sql = GET_QUANTITY_BY_ID;
 			System.out.println();
 			MapSqlParameterSource param = stockParameterMapper.mapStockIdParameter(bId);
+			System.out.println(bId);
 			Integer quantity = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
 			if (quantity != null) {
 				return quantity;

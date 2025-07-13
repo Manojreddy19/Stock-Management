@@ -1,5 +1,6 @@
 package com.example.stockmanagement.service.impl;
 
+import java.io.Console;
 import java.util.Date;
 import java.util.List;
 
@@ -31,60 +32,82 @@ public class StockServicempl implements StockService {
 	@Override
 	@Transactional
 	public String stockUp(Adjustment adjustmentHeader) throws StockManagementException {
+		try {
+			log.info("In stock Up");
+			List<AdjustmentDetail> adjustmentDetails = adjustmentDao
+					.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
+			log.info("In stock Up");
+			System.out.println(adjustmentDetails);
 
-		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
-				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
-		log.info("In stock Up");
-		System.out.println(adjustmentDetails);
+			for (AdjustmentDetail detail : adjustmentDetails) {
+				StockMaster stock = new StockMaster(detail.getProductId(), detail.getBatch(), null, detail.getQuantity(),
+						detail.getExpiryDate(), detail.getMrp(), adjustmentHeader.getCreatedBy(), new Date(), "Admin1",
+						new Date());
+				log.info("before quantitiyDao "+detail.getBatchId());
+				
+				int openingStock = stockDao.getQunatityById(detail.getBatchId());
+				
+				System.out.println("After getting quantity "+openingStock);
+				long generatedId = stockDao.insertAndSendBackBId(stock);
+				System.out.println("After stockDao.insertAndSendBackBId(stock)");
 
-		for (AdjustmentDetail detail : adjustmentDetails) {
-			StockMaster stock = new StockMaster(detail.getProductId(), detail.getBatch(), null, detail.getQuantity(),
-					detail.getExpiryDate(), detail.getMrp(), adjustmentHeader.getCreatedBy(), new Date(), "Admin1",
-					new Date());
-			log.info("before quantitiyDao "+detail.getBatchId());
-			int openingStock = stockDao.getQunatityById(detail.getBatchId());
-			long generatedId = stockDao.insertAndSendBackBId(stock);
-			System.out.println("After stockDao.insertAndSendBackBId(stock)");
+				adjustmentDao.updateGeneratedBatchId(adjustmentHeader.getAdjustmentId(), detail.getBatchId(), generatedId);
+				
+				System.out.println("After updateGeneratedBatchId(");
+				StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
+						detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
+				stockDao.addStockTrack(stockTrack);
+				log.info("After Stock Track");
 
-			adjustmentDao.updateGeneratedBatchId(adjustmentHeader.getAdjustmentId(), detail.getBatchId(), generatedId);
+				
+
+			}
+			System.out.println("In stock Up end");
 			
-			System.out.println("After updateGeneratedBatchId(");
-			StockTrack stockTrack = new StockTrack(generatedId, adjustmentHeader.getAdjustmentType(),
-					detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
-			stockDao.addStockTrack(stockTrack);
-			log.info("After Stock Track");
-
-			
+		}catch (StockManagementException e) {
+			throw new StockManagementException(e.getMessage());
 
 		}
-		System.out.println("In stock Up end");
+
+
 		return "";
 	}
 
 	@Override
 	@Transactional
-	public boolean stockDown(Adjustment adjustmentHeader) throws StockManagementException {
+	public void stockDown(Adjustment adjustmentHeader) throws StockManagementException {
 
-		List<AdjustmentDetail> adjustmentDetails = adjustmentDao
-				.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
+		try {
+			System.out.println("In stock Down Start");
+			List<AdjustmentDetail> adjustmentDetails = adjustmentDao
+					.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
 
-		for (AdjustmentDetail detail : adjustmentDetails) {
+			for (AdjustmentDetail detail : adjustmentDetails) {
 
-			int openingStock = stockDao.getQunatityById(detail.getBatchId());
+				int openingStock = stockDao.getQunatityById(detail.getBatchId());
+				
+				System.out.println("In stock Down openingStock "+openingStock);
+				
 
-			if (openingStock < detail.getQuantity()) {
-				throw new StockManagementException("Insufficent Stock Quantity");
+				if (openingStock < detail.getQuantity()) {
+					throw new StockManagementException("Insufficent Stock Quantity");
+				}
+
+				stockDao.modifyStockQuantityByBId(detail.getBatchId(), openingStock - detail.getQuantity(),
+						adjustmentHeader.getModifiedBy());
+				System.out.println("In stock Down modifying "+openingStock);
+
+				StockTrack stockTrack = new StockTrack(detail.getBatchId(), adjustmentHeader.getAdjustmentType(),
+						-detail.getQuantity(), openingStock, new Date(), "Admin1");
+				stockDao.addStockTrack(stockTrack);
+
 			}
-
-			stockDao.modifyStockQuantityByBId(detail.getBatchId(), openingStock - detail.getQuantity(),
-					adjustmentHeader.getModifiedBy());
-
-			StockTrack stockTrack = new StockTrack(detail.getBatchId(), adjustmentHeader.getAdjustmentType(),
-					-detail.getQuantity(), openingStock, new Date(), adjustmentHeader.getModifiedBy());
-			stockDao.addStockTrack(stockTrack);
-
+			
+		}catch (StockManagementException e) {
+			throw new StockManagementException(e.getMessage());
 		}
-		return true;
+		
+		
 
 	}
 

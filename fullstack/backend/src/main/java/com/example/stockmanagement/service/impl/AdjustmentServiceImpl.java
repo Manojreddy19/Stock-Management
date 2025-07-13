@@ -43,6 +43,10 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 		try {
 			System.out.println(" status value "+status.getValue());
 			Adjustment adjustment=adjustmentDao.getAdjustmentById(adjustmentId);
+			if(adjustment.getStatus()!=Status.OPEN)
+			{
+				throw new StockManagementException("Adjustment Alredy Closed");
+			}
 			System.out.println("After getting adjustment");
 			if (status.getValue()=='A') {
 				System.out.println("In updateStatus start");
@@ -57,7 +61,7 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 				adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy);
 			}
 		} catch (Exception e) {
-			throw new StockManagementException("error occured");
+			throw new StockManagementException(e.getMessage());
 		}
 
 	}

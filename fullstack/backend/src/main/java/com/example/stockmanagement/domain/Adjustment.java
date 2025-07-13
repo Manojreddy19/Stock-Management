@@ -6,7 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import com.example.stockmanagement.utilities.AdjustmentType;
 import com.example.stockmanagement.utilities.Status;
@@ -22,7 +21,7 @@ public class Adjustment {
 	@Min(value = 1, message = "Amount must be positive")
 	private Double amount;
 	
-	@NotNull(message = "Status is required")
+
 	private Status status;
 	
 	private String remarks;

@@ -12,7 +12,7 @@ public interface StockService  {
 
 	public String stockUp(Adjustment adjustmentHeader) throws StockManagementException;
 
-	public boolean stockDown(Adjustment adjustmentHeader) throws StockManagementException;
+	public void stockDown(Adjustment adjustmentHeader) throws StockManagementException;
 
 	public List<StockMaster> getAllStocks() throws StockManagementException;
 

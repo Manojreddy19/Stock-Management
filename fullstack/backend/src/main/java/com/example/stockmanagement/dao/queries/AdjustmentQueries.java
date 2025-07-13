@@ -1,7 +1,7 @@
 package com.example.stockmanagement.dao.queries;
 
 public class AdjustmentQueries {
-	protected String INSERT_INTO_ADJUSTMENT_HEADER = "INSERT INTO tbl_adjustment_header(AdjustmentId, AdjustmentType, Amount, Status, Remarks, CreatedBy, ModifiedBy) VALUES(:AdjustmentId, :adjustmentType, :Amount, :Status, :Remarks, :CreatedBy, :ModifiedBy)";	protected String INSERT_INTO_ADJUSTMENT_DETAIL = "INSERT INTO tbl_adjustment_details(AdjustmentId, ProductId, Batch, BatchId, Quantity, Mrp, ExpiryDate, Amount) VALUES(:AdjustmentId, :ProductId, :Batch, :BatchId, :Quantity, :Mrp, :ExpiryDate, :Amount)";
+	protected String INSERT_INTO_ADJUSTMENT_HEADER = "INSERT INTO tbl_adjustment_header( AdjustmentType, Amount, Status, Remarks, CreatedBy, ModifiedBy) VALUES( :adjustmentType, :Amount, :Status, :Remarks, :CreatedBy, :ModifiedBy)";	protected String INSERT_INTO_ADJUSTMENT_DETAIL = "INSERT INTO tbl_adjustment_details(AdjustmentId, ProductId, Batch, BatchId, Quantity, Mrp, ExpiryDate, Amount) VALUES(:AdjustmentId, :ProductId, :Batch, :BatchId, :Quantity, :Mrp, :ExpiryDate, :Amount)";
 	protected String UPDATE_STATUS_AND_MODIFIEDBY = "UPDATE tbl_adjustment_header SET status=:Status, ModifiedBy=:ModifiedBy WHERE AdjustmentId=:AdjustmentId";
 	protected String SELECT_ALL_ADJUSTMENTS = "SELECT * FROM tbl_adjustment_header";
 	protected String UPDATE_GENERATEDBID = "UPDATE tbl_adjustment_details SET GeneratedBatchId=:GeneratedBid WHERE AdjustmentId=:AdjustmentId AND BatchId=:BatchId";
