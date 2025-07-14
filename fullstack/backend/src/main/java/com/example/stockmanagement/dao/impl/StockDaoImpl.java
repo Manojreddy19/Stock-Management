@@ -80,7 +80,7 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 
 	@Override
 	public List<StockMaster> getAllStocks() throws StockManagementException {
-		String sql = GET_ALL_STOCKS_WITH_POSITIVE_QUANTITY;
+		String sql = GET_ALL_STOCKS;
 		List<StockMaster> stocks = null;
 		try {
 			stocks = namedParameterJdbcTemplate.query(sql, new StockMapper());

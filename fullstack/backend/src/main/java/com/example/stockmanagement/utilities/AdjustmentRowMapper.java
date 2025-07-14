@@ -31,11 +31,9 @@ public class AdjustmentRowMapper implements RowMapper<Adjustment> {
 
 		} else {
 			adjustment.setStatus(Status.REJECT);
-
 		}
 
 		adjustment.setAmount(rs.getDouble("Amount"));
-
 		adjustment.setRemarks(rs.getString("Remarks"));
 		adjustment.setCreatedBy(rs.getString("CreatedBy"));
 		adjustment.setCreatedAt(rs.getTimestamp("CreatedAt"));

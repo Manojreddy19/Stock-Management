@@ -100,3 +100,7 @@ public class AdjustmentController {
 	}
 
 }
+
+//Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//System.out.println( auth.getPrincipal());
+
