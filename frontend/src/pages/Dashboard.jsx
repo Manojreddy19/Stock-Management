@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import DashboardTable from "../components/DashboardTable";
 import fetchData from "../components/productstesting";
 import { ip } from '../assets/utils';
+import '../styles/dashborad.css'
 const Dashboard = () => {
   const [adjustments, setAdjustments] = useState([]);
 
   const fetchdata = async () => {
     let data = await fetchData(`http://${ip}:8080/api/getAdjustments`, { withCredentials: true }
     );
+    console.log("called")
     setAdjustments(data);
   };
 
@@ -27,17 +29,12 @@ const Dashboard = () => {
     "modifiedAt",
   ];
 
-  return <DashboardTable headers={Headers} data={adjustments} />;
+  return (
+    <div id="dashboard-container">
+  
+  <DashboardTable headers={Headers} data={adjustments} fetchData={fetchdata}/>
+  </div>
+);
 };
 
 export default Dashboard;
-
-
-// console.log(data);
-//     const filtered = [];
-//     for (let i = 0; i < data.length; i++) {
-//       if (data[i].status === 'OPEN') {
-//         filtered.push(data[i]);
-//       }
-//     }
-//     console.log(filtered)

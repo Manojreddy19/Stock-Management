@@ -1,10 +1,28 @@
 table {
-  width: 100%;
+  width: 80%;
   margin: 20px;
   border-collapse: collapse;
 }
-*{
+* {
   color: black;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  margin: 0;
+  gap: 50px;
+  width: 70%;
+}
+
+body {
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
 }
 th,
 td {
@@ -17,38 +35,40 @@ th {
 }
 
 #dashboard-table {
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  width: 100vw;
   color: black;
-  margin: 30px auto;
-  overflow-x: auto;
+  margin: 30px;
   padding: 10px;
   box-sizing: border-box;
-  background-color: #f9f9f9;
   border-radius: 8px;
+  min-width: 80%;
 }
-
+#main-table {
+  width: 80%;
+}
 #dashboard-table table {
-  width: 100%;
+  width: 400px;
   border-collapse: collapse;
-  min-width: 600px; /* Ensures table doesn't shrink too much */
+  min-width: 600px;
 }
 
 #dashboard-table th,
 #dashboard-table td {
   white-space: nowrap;
-  overflow: hidden;
-
 }
 
-
-
 #adjustment-form-container {
-  width: 60%;
+  width: 80%;
   margin: 30px auto;
-  padding: 20px;
+  padding: 35px;
   border: 1px solid #999;
   border-radius: 8px;
-  
+
   font-family: Arial, sans-serif;
 }
 
@@ -65,13 +85,13 @@ form input[type="date"] {
   padding: 8px;
   margin-top: 5px;
   box-sizing: border-box;
-  border: 1px solid #999;background-color: white;
+  border: 1px solid #999;
+  background-color: white;
   border-radius: 4px;
-
 }
 
 form input:read-only {
-background-color: white;
+  background-color: white;
 }
 
 form input:focus {
@@ -104,4 +124,10 @@ h3 {
   color: red;
   font-size: 13px;
   margin-top: 5px;
+}
+
+#buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }

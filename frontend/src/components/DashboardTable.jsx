@@ -1,5 +1,5 @@
 import DynamicTable from './DynamicTable'
-import './style.css'
+import '../styles/dashborad.css'
 import { useEffect, useState } from 'react'
 import PopUp from './PopUp'
 import axios from 'axios';
@@ -7,23 +7,30 @@ import { ToastContainer, toast } from 'react-toastify';
 import { ip } from '../assets/utils';
 
 
-const DashboardTable = ({headers,data}) => {
+const DashboardTable = ({headers,data, fetchData}) => {
+
 const[dashData,setDashData] = useState(data)
 const [showPopUp, setShowPopUp] = useState(false)
 const [details, setDetails] = useState([])
+const [status, setStatus] = useState('OPEN');
+
+const user = JSON.parse(localStorage.getItem("user"));
+const modifiedBy = user?.username || "unknown";
 
 useEffect(() => {
   filterAdjustmentsByStatus('OPEN');
 }, [data]);
 const filterAdjustmentsByStatus=(status) => {
   const filteredData = data.filter(adjustment => adjustment.status === status);
-  setDashData(filteredData);
+  setStatus(status)
+  setDashData(filteredData ||[]);
 };
 
   const submitRequest = async (adjustmentId, status) => {
   const payload = {
     adjustmentId,
-    status
+    status,
+    modifiedBy: modifiedBy
   };
 
   try {
@@ -36,6 +43,9 @@ const filterAdjustmentsByStatus=(status) => {
 
     toast.success(`Adjustment ${status} successfully!`);
     console.log("Status updated successfully", response.data);
+    fetchData();
+    filterAdjustmentsByStatus("OPEN")
+
   } catch (error) {
     toast.error(`${error.response?.data?.message || 'Failed to update status'}`);
     console.error("Failed to update status", error);
@@ -49,23 +59,25 @@ const filterAdjustmentsByStatus=(status) => {
       setDetails(Details)
       setShowPopUp(true)
     }
-     
-
   }
+
   const detailHeaders=["adjustmentId","productId","batch","batchId","quantity","mrp","expiryDate","amount","generatedBatchId"]
   return (
-    <>
+    <div id="wrapper">
+
+    <div id="dashboard-table">
      <ToastContainer autoClose={1000} limit={1} />
-    <button name="accept" id="accept" onClick={() => filterAdjustmentsByStatus('ACCEPT')}>Accepted</button>
-    <button name="reject" id="reject" onClick={() => filterAdjustmentsByStatus('REJECT')}>Rejected</button>
-    <button name="open" id="open" onClick={() => filterAdjustmentsByStatus('OPEN')}>OPEN</button>
+     <div id='buttons'>
+    <button name="open" id="open" style={{backgroundColor: 'blue', color: 'white'}} onClick={() => filterAdjustmentsByStatus('OPEN')}>OPEN</button>
+    <button name="accept" id="accept" style={{backgroundColor: 'green', color: 'white'}} onClick={() => filterAdjustmentsByStatus('ACCEPT')}>Accepted</button>
+    <button name="reject" id="reject" style={{backgroundColor: 'red', color: 'white'}} onClick={() => filterAdjustmentsByStatus('REJECT')}>Rejected</button>
+    </div>
    <div id="model">
           <PopUp showPopUp={showPopUp} closePopUp={()=>setShowPopUp(false)}>
           <DynamicTable headers={detailHeaders} data={details}/>
           </PopUp>
     </div>
-    <div id="dashboard-table">
-    <table>
+    <table id="main-table">
         <thead>
         <tr>
     {headers && headers.map((header,index)=>(
@@ -77,9 +89,12 @@ const filterAdjustmentsByStatus=(status) => {
      <th>
       View All Adjustments
     </th>
-    <th>
+    {
+      status === 'OPEN' && (
+      <th>
       Actions
-    </th>
+    </th>) 
+    }
     </tr>
     </thead>
     <tbody>
@@ -105,14 +120,14 @@ const filterAdjustmentsByStatus=(status) => {
              </>
           }
         </td>
+          { status === 'OPEN' ? (
         <td>
-          {
             <>
             <button onClick={()=>submitRequest(adjustment?.adjustmentId,"ACCEPT")}>Approve</button>
             <button onClick={()=>submitRequest(adjustment?.adjustmentId,"REJECT")} >Reject</button>
              </>
+        </td>) : ""
           }
-        </td>
             </tr>
           )
         })
@@ -120,9 +135,9 @@ const filterAdjustmentsByStatus=(status) => {
     
     </tbody>
     </table>
-     </div>
        
-    </>
+    </div>
+    </div>
   )
 }
 

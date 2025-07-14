@@ -13,7 +13,7 @@ const fetchdata=async(url)=>{
     .catch((err)=>{
         console.log(err)
     })
-    console.log(url)
+    // console.log(url)
     return (response)
  
 }

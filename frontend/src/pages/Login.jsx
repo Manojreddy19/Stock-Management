@@ -28,9 +28,9 @@ const Login = () => {
         throw new Error('Login failed');
       }
 
-      const result = await response.json(); // result should contain { roles: ["ADMIN"], username: "admin" }
+      const result = await response.json(); 
 
-      localStorage.setItem('user', JSON.stringify(result)); // persist session
+      localStorage.setItem('user', JSON.stringify(result)); 
 
       console.log(result.roles)
       if (result.roles.includes("ADMIN")) {

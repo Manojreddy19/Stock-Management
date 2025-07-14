@@ -43,12 +43,7 @@ body {
   border: 1px solid #aaa;
   border-radius: 5px;
   box-sizing: border-box;
-}
-
-.login-form input:focus {
-  outline: none;
-  border-color: #74a1a1;
-  box-shadow: 0 0 4px rgba(116, 161, 161, 0.6);
+  background-color: white;
 }
 
 .login-form button {

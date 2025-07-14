@@ -8,7 +8,7 @@ const StockAdjustmentSelect = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
+    <div style={{textAlign: 'center', margin: 'auto'}}>
       <h2>Select Stock Adjustment Type</h2>
       <button onClick={() => handleSelection('UP')} style={{ marginRight: '20px' }}>
         Stock Up
