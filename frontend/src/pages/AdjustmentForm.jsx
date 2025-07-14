@@ -4,6 +4,7 @@ import DynamicTable from '../components/DynamicTable';
 import { ToastContainer, toast } from 'react-toastify';
 import '../components/style.css';
 import axios from 'axios';
+import { ip } from '../assets/utils';
 
 const AdjustmentForm = () => {
   const location = useLocation();
@@ -31,7 +32,6 @@ const AdjustmentForm = () => {
   const [availableQty, setAvailableQty] = useState(null);
 const [quantityError, setQuantityError] = useState(false);
 
-
   const headers = [
     "productId",
     "batchDetails",
@@ -44,7 +44,7 @@ const [quantityError, setQuantityError] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.0.219:8080/api/getStocks',{
+        const response = await fetch(`http://${ip}:8080/api/getStocks`,{
           withCredentials: true,
         });
         if (!response.ok) {
@@ -88,7 +88,7 @@ const [quantityError, setQuantityError] = useState(false);
 
 try {
   const response = await axios.post(
-    'http://192.168.0.219:8080/api/addAdjustment',
+    `http://${ip}:8080/api/addAdjustment`,
     payload,
     {
       headers: {

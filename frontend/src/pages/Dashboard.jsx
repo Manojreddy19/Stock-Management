@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import DashboardTable from "../components/DashboardTable";
 import fetchData from "../components/productstesting";
-
+import { ip } from '../assets/utils';
 const Dashboard = () => {
   const [adjustments, setAdjustments] = useState([]);
 
   const fetchdata = async () => {
-    let data = await fetchData("http://192.168.0.219:8080/api/getAdjustments", { withCredentials: true }
+    let data = await fetchData(`http://${ip}:8080/api/getAdjustments`, { withCredentials: true }
     );
     setAdjustments(data);
   };

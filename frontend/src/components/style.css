@@ -3,6 +3,9 @@ table {
   margin: 20px;
   border-collapse: collapse;
 }
+*{
+  color: black;
+}
 th,
 td {
   padding: 12px;
@@ -12,24 +15,7 @@ td {
 th {
   background-color: #74a1a1;
 }
-/* #model
-{
-    position:absolute;
-    top:200px;
-    left:200px;
-    background-color: rgb(159, 180, 177);
-    color: black;
-    border-radius: 20px;
-     backdrop-filter: blur(5px);
-}
-#pop-button
-{
-    border-radius: 20%;
-    background-color: rgb(14, 0, 0);
-    position:absolute;
-    top:0px;
-    right:0px;
-} */
+
 #dashboard-table {
   width: 100%;
   color: black;
@@ -62,7 +48,7 @@ th {
   padding: 20px;
   border: 1px solid #999;
   border-radius: 8px;
-  background-color: #a9b8b8;
+  
   font-family: Arial, sans-serif;
 }
 
@@ -70,7 +56,6 @@ form label {
   display: block;
   margin-bottom: 15px;
   font-weight: bold;
-  color: #333;
 }
 
 form input[type="text"],
@@ -80,13 +65,13 @@ form input[type="date"] {
   padding: 8px;
   margin-top: 5px;
   box-sizing: border-box;
-  border: 1px solid #999;
+  border: 1px solid #999;background-color: white;
   border-radius: 4px;
-  background-color: black;
+
 }
 
 form input:read-only {
-  background-color: #685858;
+background-color: white;
 }
 
 form input:focus {

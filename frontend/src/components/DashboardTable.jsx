@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import PopUp from './PopUp'
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { ip } from '../assets/utils';
 
 
 const DashboardTable = ({headers,data}) => {
@@ -26,7 +27,7 @@ const filterAdjustmentsByStatus=(status) => {
   };
 
   try {
-    const response = await axios.post('http://192.168.0.219:8080/api/updateStatus', payload, {
+    const response = await axios.post(`http://${ip}:8080/api/updateStatus`, payload, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
