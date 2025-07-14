@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import DynamicTable from "../components/DynamicTable";
 import { ToastContainer, toast } from "react-toastify";
-import "../components/style.css";
+import "../styles/adjustmentForm.css";
 import axios from "axios";
 import { ip } from "../assets/utils";
 
@@ -47,9 +47,9 @@ const AdjustmentForm = () => {
           withCredentials: true,
         });
         if (!response.ok) {
-          throw new Error(`HTTP error! : ${response.status}`);
+          throw new Error(`HTTP error! : ${response?.status}`);
         }
-        const result = await response.json();
+        const result = await response?.json();
         setFetchedData(result);
       } catch (err) {
         setError(err);
@@ -65,7 +65,7 @@ const AdjustmentForm = () => {
       amount,
       createdBy: createdBy,
       adjustmentDetails: adjustments.map((item) => {
-        const [batch, batchId] = item.batchDetails.split("-");
+        const [batch, batchId] = item?.batchDetails?.split("-")||"";
         return {
           productId: item.productId,
           batch,
@@ -93,23 +93,22 @@ const AdjustmentForm = () => {
       );
 
       if (response.status === 201) {
-        toast.success(response.data.message);
+        toast.success(response?.data?.message);
         setAdjustments([]);
         setamount(0);
-        console.log(response.data);
+       
       } else {
         toast.error("Submission failed");
-        console.log(response);
+    
       }
     } catch (error) {
       if (error.response) {
-        console.log("Backend error response:", error.response.data);
+        console.log("Backend error response:", error?.response?.data);
         toast.error(
-          "Submission failed: " + error.response.data?.message ||
+          "Submission failed: " + error?.response?.data?.message ||
             "Unknown error"
         );
       } else {
-        console.error("Error submitting adjustment:", error);
         toast.error("Error occurred while submitting");
       }
     }
@@ -125,8 +124,8 @@ const AdjustmentForm = () => {
       };
 
       updated.amount =
-        updated.mrp && updated.quantity
-          ? (updated.mrp * updated.quantity).toFixed(2)
+        updated.mrp && updated?.quantity
+          ? (updated.mrp * updated?.quantity)?.toFixed(2)
           : "";
 
       if (name === "quantity" && adjustmentType === "DOWN") {
@@ -146,7 +145,7 @@ const AdjustmentForm = () => {
     e.preventDefault();
 
     const newAdjustment = { ...formData };
-    if (newAdjustment.quantity > availableQty) {
+    if (adjustmentType === 'DOWN'&& newAdjustment?.quantity > availableQty) {
       toast.error("Quantity exceeded available quantity");
       return;
     }
@@ -155,12 +154,14 @@ const AdjustmentForm = () => {
 
     for (const adjustment of adjustments) {
       if (
-        adjustment.productId === newAdjustment.productId &&
-        adjustment.batchDetails === newAdjustment.batchDetails
+        adjustment.productId === newAdjustment?.productId?.toUpperCase() &&
+        adjustment.batchDetails === newAdjustment?.batchDetails
       ) {
+        console.log("what happend here")
         toast.error("Entered duplicate records");
         return;
       }
+     
     }
 
     newAdjustment.productId = newAdjustment?.productId?.toUpperCase();
@@ -184,11 +185,11 @@ const AdjustmentForm = () => {
   };
 
   const filterByProduct = (e) => {
-    const value = e.target.value.toLowerCase();
+    const value = e?.target?.value?.toLowerCase();
     setFormData((prev) => ({ ...prev, productId: value }));
 
     const filteredArray = fetchedData.filter(
-      (item) => item.productId.toLowerCase() === value
+      (item) => item?.productId?.toLowerCase() === value
     );
 
     setStockData(filteredArray);
@@ -198,13 +199,13 @@ const AdjustmentForm = () => {
   };
 
   const filterBybatchId = (e) => {
-    const value = e.target.value;
+    const value = e?.target?.value;
     setFormData((prev) => ({ ...prev, batchDetails: value }));
 
     const filteredArray =
       stockData?.filter((item) => {
-        const pattern = `${item.batch.toLowerCase()}-${item.batchId}`;
-        return pattern.includes(value.toLowerCase());
+        const pattern = `${item?.batch?.toLowerCase()}-${item?.batchId}`;
+        return pattern.includes(value?.toLowerCase());
       }) || [];
 
     if (filteredArray.length === 1) {
@@ -223,7 +224,7 @@ const AdjustmentForm = () => {
   };
 
   return (
-    <>
+    < div id="main-wrapper">
       <ToastContainer autoClose={1000} limit={1} />
 
       <div id="adjustment-form-container">
@@ -347,14 +348,13 @@ const AdjustmentForm = () => {
         </form>
       </div>
 
-      <div>
-        <h3>Added Adjustments</h3>
+      <div id="second-box">
         <DynamicTable headers={headers} data={adjustments} amount={amount} />
-        <button onClick={submitAdjustmentetails} name="Submit">
+        <button onClick={submitAdjustmentetails} name="Submit" id="submit-button">
           Submit
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

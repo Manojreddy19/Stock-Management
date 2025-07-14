@@ -56,3 +56,19 @@ td {
 th {
   background-color: #74a1a1;
 }
+button
+{
+  background-color: #74a1a1;
+  color: black;
+  width: 150px;
+  font-weight: 800;
+  border-radius: 10px;
+  height: 30px;
+  font-size: medium;
+  margin: 2px;
+}
+button:hover
+{
+    cursor: pointer;
+    background-color: #5c8e8e;
+}

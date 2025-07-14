@@ -14,14 +14,14 @@ const [showPopUp, setShowPopUp] = useState(false)
 const [details, setDetails] = useState([])
 const [status, setStatus] = useState('OPEN');
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage?.getItem("user"));
 const modifiedBy = user?.username || "unknown";
 
 useEffect(() => {
   filterAdjustmentsByStatus('OPEN');
 }, [data]);
 const filterAdjustmentsByStatus=(status) => {
-  const filteredData = data.filter(adjustment => adjustment.status === status);
+  const filteredData = data?.filter(adjustment => adjustment?.status === status);
   setStatus(status)
   setDashData(filteredData ||[]);
 };
@@ -42,12 +42,12 @@ const filterAdjustmentsByStatus=(status) => {
     });
 
     toast.success(`Adjustment ${status} successfully!`);
-    console.log("Status updated successfully", response.data);
+    console.log("Status updated successfully", response?.data);
     fetchData();
     filterAdjustmentsByStatus("OPEN")
 
   } catch (error) {
-    toast.error(`${error.response?.data?.message || 'Failed to update status'}`);
+    toast.error(`${error?.response?.data?.message || 'Failed to update status'}`);
     console.error("Failed to update status", error);
   }
 };
@@ -80,7 +80,7 @@ const filterAdjustmentsByStatus=(status) => {
     <table id="main-table">
         <thead>
         <tr>
-    {headers && headers.map((header,index)=>(
+    {headers && headers?.map((header,index)=>(
         
         <th key={index}>
             {header}
@@ -99,10 +99,10 @@ const filterAdjustmentsByStatus=(status) => {
     </thead>
     <tbody>
     {
-        dashData && dashData.map((adjustment)=>
+        dashData && dashData?.map((adjustment)=>
         {
           return  (
-            <tr key={adjustment.adjustmentId} style={{ borderBottom: '1px solid #ddd' }}>
+            <tr key={adjustment?.adjustmentId} style={{ borderBottom: '1px solid #ddd' }}>
                 {headers.map((header,index)=>{
                 
        
