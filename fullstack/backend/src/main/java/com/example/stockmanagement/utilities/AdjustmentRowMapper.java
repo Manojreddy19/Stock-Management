@@ -18,7 +18,6 @@ public class AdjustmentRowMapper implements RowMapper<Adjustment> {
 		if (adj == 'U') {
 			adjustment.setAdjustmentType(AdjustmentType.valueOf("UP"));
 
-
 		} else {
 			adjustment.setAdjustmentType(AdjustmentType.valueOf("DOWN"));
 

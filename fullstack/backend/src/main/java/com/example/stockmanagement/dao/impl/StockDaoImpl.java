@@ -47,9 +47,8 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	public Integer getQunatityById(Long bId) throws StockManagementException {
 		try {
 			String sql = GET_QUANTITY_BY_ID;
-			System.out.println();
 			MapSqlParameterSource param = stockParameterMapper.mapStockIdParameter(bId);
-			System.out.println(bId);
+
 			Integer quantity = namedParameterJdbcTemplate.queryForObject(sql, param, Integer.class);
 			if (quantity != null) {
 				return quantity;
@@ -64,20 +63,18 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 
 	@Override
 	public void modifyStockQuantityByBId(Long bId, int qunatity, String modifiedBy) throws StockManagementException {
-		try
-		{
+		try {
 			String sql = MODIFY_STOCK_QUANTITY_BY_ID;
 			MapSqlParameterSource params = stockParameterMapper.mapStockUpdateParameters(bId, qunatity, modifiedBy);
 			int flag = namedParameterJdbcTemplate.update(sql, params);
 			if (flag > 0) {
 				return;
 			}
-			
-		}catch(Exception e)
-		{
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		throw new StockManagementException("Failed to modify stock quantity for BatchId: " + bId);
 	}
 
@@ -87,15 +84,12 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 		List<StockMaster> stocks = null;
 		try {
 			stocks = namedParameterJdbcTemplate.query(sql, new StockMapper());
+			return stocks;
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
 
-		}
-		System.out.println(stocks);
-		if (stocks != null && !stocks.isEmpty()) {
-			return stocks;
-		}
 		throw new StockManagementException("no stocks found with positive quantity");
 
 	}
@@ -107,9 +101,7 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 			String sql = INSERT_INTO_STOCK_TRACK;
 			MapSqlParameterSource params = stockParameterMapper.mapStockTrackParameters(stocktrack);
 			int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
-			System.out.println("Rows Effected in DAO " + rowsAffected);
 			if (rowsAffected > 0) {
-
 				return;
 			}
 

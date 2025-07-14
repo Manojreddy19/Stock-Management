@@ -18,7 +18,7 @@ public class Adjustment {
 	private AdjustmentType adjustmentType;
 	
 	@NotNull(message="Amount is required")
-	@Min(value = 1, message = "Amount must be positive")
+	@Min(value = 0, message = "Amount must be positive")
 	private Double amount;
 	
 
@@ -30,6 +30,7 @@ public class Adjustment {
 	@NotNull(message = "Atleast one AdjustmentDetail is required")
 	private List<AdjustmentDetail> adjustmentDetails;
 	
+	@NotNull(message = "Created by is required")
 	private String createdBy;
 	private Date createdAt;
 	private String modifiedBy;

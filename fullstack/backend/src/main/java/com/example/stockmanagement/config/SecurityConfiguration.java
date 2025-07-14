@@ -33,16 +33,14 @@ public class SecurityConfiguration {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    http
-	        .csrf(csrf -> csrf.disable())
-	        .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable CORS using bean
-	        .authorizeHttpRequests(auth -> auth
-	            .antMatchers("/login").permitAll()
-	            .anyRequest().permitAll()
-	        )
-	        .formLogin(form -> form.disable());
+		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable
+																											// CORS
+																											// using
+																											// bean
+				.authorizeHttpRequests(auth -> auth.antMatchers("/login").permitAll().anyRequest().permitAll())
+				.formLogin(form -> form.disable());
 
-	    return http.build();
+		return http.build();
 	}
 
 	@Bean
@@ -53,16 +51,16 @@ public class SecurityConfiguration {
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-	    CorsConfiguration configuration = new CorsConfiguration();
+		CorsConfiguration configuration = new CorsConfiguration();
 
-	    configuration.setAllowedOriginPatterns(Arrays.asList("*")); 
-	    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-	    configuration.setAllowedHeaders(Arrays.asList("*"));
-	    configuration.setAllowCredentials(true); 
+		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowCredentials(true);
 
-	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-	    source.registerCorsConfiguration("/**", configuration);
-	    return source;
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 
 }

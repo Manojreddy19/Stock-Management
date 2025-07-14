@@ -19,7 +19,7 @@ public interface AdjustmentDao {
 	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException;
 
 	public List<Adjustment> getAdjustments() throws StockManagementException;
-	
+
 	public Adjustment getAdjustmentById(long adjustmentId) throws StockManagementException;
 
 	public List<AdjustmentDetail> getAdjustmentDetails(long adjustmentId) throws StockManagementException;

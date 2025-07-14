@@ -32,26 +32,20 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 			e.printStackTrace();
 			throw new StockManagementException(e.getMessage());
 		}
-
 	}
 
 	@Override
 	@Transactional
-	public void updateStatus(Long adjustmentId, Status status, String modifiedBy)
-			throws StockManagementException {
-		
+	public void updateStatus(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException {
+
 		try {
-			System.out.println(" status value "+status.getValue());
-			Adjustment adjustment=adjustmentDao.getAdjustmentById(adjustmentId);
-			if(adjustment.getStatus()!=Status.OPEN)
-			{
+			Adjustment adjustment = adjustmentDao.getAdjustmentById(adjustmentId);
+			adjustment.setModifiedBy(modifiedBy);
+			if (adjustment.getStatus() != Status.OPEN) {
 				throw new StockManagementException("Adjustment Alredy Closed");
 			}
-			System.out.println("After getting adjustment");
-			if (status.getValue()=='A') {
-				System.out.println("In updateStatus start");
+			if (status.getValue() == 'A') {
 				adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy);
-				System.out.println("After Adjustment DAO");
 				if (adjustment.getAdjustmentType() == AdjustmentType.UP) {
 					stockService.stockUp(adjustment);
 				} else {
@@ -71,13 +65,12 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 
 		try {
 			List<Adjustment> adjustments = adjustmentDao.getAdjustments();
-			for(Adjustment adj:adjustments)
-			{
+			for (Adjustment adj : adjustments) {
 				adj.setAdjustmentDetails(adjustmentDao.getAdjustmentDetails(adj.getAdjustmentId()));
 			}
 			return adjustments;
 		} catch (Exception e) {
-			throw new StockManagementException("error occured");
+			throw new StockManagementException(e.getMessage());
 		}
 
 	}

@@ -6,16 +6,18 @@ import com.example.stockmanagement.domain.Adjustment;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 
 public class StaticHelperForAdjustment {
-	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Status status, String modifiedBy) {
+	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Status status,
+			String modifiedBy) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("AdjustmentId", adjustmentId);
-		System.out.println("Status Value "+status.getValue());
+		System.out.println("Status Value " + status.getValue());
 		params.addValue("Status", String.valueOf(status.getValue()));
 		params.addValue("ModifiedBy", modifiedBy);
 		return params;
 	}
 
-	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Long batchId, Long generatedBid) {
+	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Long batchId,
+			Long generatedBid) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("AdjustmentId", adjustmentId);
 		params.addValue("BatchId", batchId);
@@ -26,7 +28,7 @@ public class StaticHelperForAdjustment {
 	public static MapSqlParameterSource getParamsToUpdateOnApproval(Adjustment adjustment) {
 		System.out.println(adjustment.getAdjustmentType().getValue());
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		params.addValue("adjustmentType", String.valueOf( adjustment.getAdjustmentType().getValue()));
+		params.addValue("adjustmentType", String.valueOf(adjustment.getAdjustmentType().getValue()));
 		params.addValue("Amount", adjustment.getAmount());
 		params.addValue("Status", "O");
 		params.addValue("Remarks", adjustment.getRemarks());
@@ -34,11 +36,13 @@ public class StaticHelperForAdjustment {
 		params.addValue("ModifiedBy", adjustment.getModifiedBy());
 		return params;
 	}
+
 	public static MapSqlParameterSource getParamsToAdjustmentId(Long adjustmentId) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("adjustmentId", adjustmentId);
 		return params;
 	}
+
 	public static MapSqlParameterSource getParamsToAdjustmentId(AdjustmentDetail detail) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("AdjustmentId", detail.getAdjustmentId());

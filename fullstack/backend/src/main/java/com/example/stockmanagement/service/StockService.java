@@ -10,7 +10,7 @@ import com.example.stockmanagement.exception.StockManagementException;
 
 public interface StockService  {
 
-	public String stockUp(Adjustment adjustmentHeader) throws StockManagementException;
+	public void stockUp(Adjustment adjustmentHeader) throws StockManagementException;
 
 	public void stockDown(Adjustment adjustmentHeader) throws StockManagementException;
 

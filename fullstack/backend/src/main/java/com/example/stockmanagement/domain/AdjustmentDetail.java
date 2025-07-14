@@ -14,22 +14,22 @@ public class AdjustmentDetail {
 
 	@NotNull(message = "Batch is required")
 	private String batch;
-	
+
 	@NotNull(message = "Batch Id is required")
 	private Long batchId;
-	
+
 	@NotNull(message = "Quantity is required")
 	@Min(value = 1, message = "Quantity must be positive")
 	private Integer quantity;
-	
+
 	@NotNull(message = "MRP is required")
 	@Min(value = 1, message = "MRP must be Positive")
 	private Double mrp;
-	
+
 	@NotNull(message = "Amount is required")
 	@Min(value = 1, message = "Amount must be Positive")
 	private Double amount;
-	
+
 	@NotNull(message = "Expiry Date is required")
 	private Date expiryDate;
 	private Long generatedBatchId;

@@ -74,16 +74,15 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	@Override
 	public void addAdjustmentDetails(long id, List<AdjustmentDetail> adjustmentsToBeAdded)
 			throws StockManagementException {
-		System.out.println(adjustmentsToBeAdded);
 		try {
 			for (AdjustmentDetail detail : adjustmentsToBeAdded) {
 				detail.setAdjustmentId(id);
 				MapSqlParameterSource mapper = StaticHelperForAdjustment.getParamsToAdjustmentId(detail);
 				int updatedRows = namedParameterJdbcTemplate.update(INSERT_INTO_ADJUSTMENT_DETAIL, mapper);
-				System.out.println(updatedRows);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new StockManagementException("Error in DAO");
 		}
 	}
 
@@ -94,7 +93,7 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToUpdateOnApproval(adjustmentId, batchId,
 					generatedBid);
 			int updatedRows = namedParameterJdbcTemplate.update(UPDATE_GENERATEDBID, params);
-			System.out.println("In Updategenerated DAO" + updatedRows);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

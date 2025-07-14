@@ -20,12 +20,12 @@ public class StockParameterMapper {
 		params.addValue("createdBy", stock.getCreatedBy());
 		return params;
 	}
-	
+
 	public MapSqlParameterSource mapStockTrackParameters(StockTrack stockTrack) {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("BatchId", stockTrack.getBatchId());
-		params.addValue("TransactionType", String.valueOf( stockTrack.getTransactionType().getValue()));
+		params.addValue("TransactionType", String.valueOf(stockTrack.getTransactionType().getValue()));
 		params.addValue("Quantity", stockTrack.getQuantity());
 		params.addValue("OpenStock", stockTrack.getOpenStock());
 		params.addValue("CreatedBy", stockTrack.getCreatedBy());

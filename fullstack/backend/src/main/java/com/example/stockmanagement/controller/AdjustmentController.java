@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,20 +35,17 @@ public class AdjustmentController {
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<Response> addAdjustment(@RequestBody @Valid Adjustment adjustment) {
 		try {
-			System.out.println("here");
-			System.out.println(adjustment);
-			
+
 			adjustmentService.addAdjustment(adjustment);
 			Response response = new Response("201", "Adjustment Added Successfully");
 
 			return ResponseEntity.status(201).body(response);
 
 		} catch (StockManagementException e) {
+			e.printStackTrace();
 			Response response = new Response("400", e.getMessage());
 			return ResponseEntity.status(500).body(response);
-
 		}
-
 	}
 
 	@GetMapping("/getAdjustments")
@@ -86,21 +82,21 @@ public class AdjustmentController {
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<Response> updateStatus(@RequestBody Map<String, String> requestParameters) {
 		try {
-			System.out.println(requestParameters);
+
 			long adjustmentId = Long.parseLong(requestParameters.get("adjustmentId"));
 			String statusChar = requestParameters.get("status");
 			Status status = Status.valueOf(statusChar);
-			System.out.println("In controller " + status + " " + adjustmentId);
-			adjustmentService.updateStatus(adjustmentId, status, "Admin");
+			String modifiedBy = requestParameters.get("modifiedBy");
+
+			adjustmentService.updateStatus(adjustmentId, status, modifiedBy);
 
 		} catch (StockManagementException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return ResponseEntity.status(400).body(new Response("400", e.getMessage()));
 
 		}
 		return ResponseEntity.status(204).body(new Response("204", "Updated Sucessfully"));
 
 	}
-	
 
 }

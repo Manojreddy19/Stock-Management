@@ -1,6 +1,6 @@
 package com.example.stockmanagement.exception;
 
-public class StockManagementException extends Exception {
+public class StockManagementException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
 	String message;

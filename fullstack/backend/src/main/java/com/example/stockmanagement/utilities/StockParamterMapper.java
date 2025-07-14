@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import com.example.stockmanagement.domain.StockMaster;
+
 @Configuration
 public class StockParamterMapper {
 
@@ -19,20 +20,21 @@ public class StockParamterMapper {
 		params.addValue("CreatedBy", stock.getCreatedBy());
 		return params;
 	}
+
 	public MapSqlParameterSource mapStockUpdateParameters(Long batchId, int quantity) {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("BatchId", batchId);
 		params.addValue("Quantity", quantity);
-		//params.addValue("ModifiedBy", session.getAttribute("username"));
+		// params.addValue("ModifiedBy", session.getAttribute("username"));
 		return params;
 	}
+
 	public MapSqlParameterSource mapStockIdParameter(Long batchId) {
 
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("BatchId", batchId);
 		return params;
 	}
-	
-	
+
 }

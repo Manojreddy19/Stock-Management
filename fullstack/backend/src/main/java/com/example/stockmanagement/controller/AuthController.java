@@ -31,11 +31,9 @@ public class AuthController {
 			System.out.println(authRequest);
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-			
-			String role = authentication.getAuthorities().stream()
-				    .map(GrantedAuthority::getAuthority)
-				    .findFirst()
-				    .orElse(null); 
+
+			String role = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst()
+					.orElse(null);
 
 			Map<String, Object> response = new HashMap<>();
 			response.put("username", authRequest.getUsername());
