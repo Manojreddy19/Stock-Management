@@ -1,0 +1,133 @@
+/* table {
+  width: 80%;
+  margin: 20px;
+  border-collapse: collapse;
+}
+* {
+  color: black;
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  margin: 0;
+  gap: 50px;
+  width: 70%;
+}
+
+body {
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+th,
+td {
+  padding: 12px;
+  border: 1px solid #999;
+  text-align: left;
+}
+th {
+  background-color: #74a1a1;
+}
+
+#dashboard-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  flex-direction: column;
+  width: 100vw;
+  color: black;
+  margin: 30px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  min-width: 80%;
+}
+#main-table {
+  width: 80%;
+}
+#dashboard-table table {
+  width: 400px;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+#dashboard-table th,
+#dashboard-table td {
+  white-space: nowrap;
+}
+
+#adjustment-form-container {
+  width: 80%;
+  margin: 30px auto;
+  padding: 35px;
+  border: 1px solid #999;
+  border-radius: 8px;
+
+  font-family: Arial, sans-serif;
+}
+
+form label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+  border: 1px solid #999;
+  background-color: white;
+  border-radius: 4px;
+}
+
+form input:read-only {
+  background-color: white;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #74a1a1;
+  box-shadow: 0 0 4px rgba(116, 161, 161, 0.6);
+}
+
+form button {
+  padding: 10px 18px;
+  background-color: #74a1a1;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #5c8e8e;
+}
+
+h2,
+h3 {
+  text-align: center;
+  color: #444;
+}
+
+.warning-text {
+  color: red;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+#buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+} */
