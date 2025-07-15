@@ -7,7 +7,7 @@ import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.utilities.Status;
 
 public interface AdjustmentService {
-	public void addAdjustment(Adjustment adjustment) throws StockManagementException;
+	public long addAdjustment(Adjustment adjustment) throws StockManagementException;
 
 	public void updateStatus(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException;
 

@@ -24,10 +24,11 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 
 	@Override
 	@Transactional
-	public void addAdjustment(Adjustment adjustment) throws StockManagementException {
+	public long addAdjustment(Adjustment adjustment) throws StockManagementException {
 		try {
 			long id = adjustmentDao.addAdjustment(adjustment);
 			adjustmentDao.addAdjustmentDetails(id, adjustment.getAdjustmentDetails());
+			return id;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new StockManagementException(e.getMessage());

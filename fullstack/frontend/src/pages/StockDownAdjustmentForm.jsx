@@ -189,7 +189,7 @@ const StockDownAdjustmentForm = () => {
   return (
     <div className="container-fluid pb-5">
       <ToastContainer autoClose={1500} limit={1} />
-      <h3 className="mb-4">
+      <h3 className="mb-3">
         Stock Adjustment: {adjustmentType === "UP" ? "Increase" : "Decrease"}
       </h3>
 
@@ -304,7 +304,7 @@ const StockDownAdjustmentForm = () => {
         </div>
       </form>
 
-      <hr className="my-4" />
+      <hr className="my-3" />
 
       <div
         className="table-responsive"

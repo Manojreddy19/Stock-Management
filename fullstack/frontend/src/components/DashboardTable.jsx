@@ -5,6 +5,7 @@ import axios from "axios";
 import Table from "react-bootstrap/Table";
 import { ip } from "../assets/utils.js";
 import { useLocation } from "react-router-dom";
+import "../styles/DashboardTable.css";
 
 const DashboardTable = ({ headers, data, fetchData }) => {
   const location = useLocation();
@@ -112,82 +113,85 @@ const DashboardTable = ({ headers, data, fetchData }) => {
         </PopUp>
       </div>
 
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            {headers &&
-              headers.map((header, index) =>
-                status === "REJECT" &&
-                (header === "modifiedBy" || header === "modifiedAt") ? (
-                  <th key={index}>
-                    {header
-                      .replace("modified", "rejected")
-                      .replace(/^\w/, (c) => c.toUpperCase())}
-                  </th>
-                ) : status === "OPEN" &&
-                  (header === "modifiedBy" || header === "modifiedAt") ? null : (
-                  <th key={index}>
-                    {header.charAt(0).toUpperCase() + header.slice(1)}
-                  </th>
-                )
-              )}
-            {user.roles.includes("ADMIN") && status === "OPEN" && (
-              <th>Actions</th>
-            )}
-          </tr>
-        </thead>
-
-        <tbody>
-          {dashData?.map((adjustment) => (
-            <tr key={adjustment?.adjustmentId}>
-              {headers.map((header, index) =>
-                status === "OPEN" &&
-                (header === "modifiedBy" || header === "modifiedAt") ? null : (
-                  <td key={index}>
-                    {header === "adjustmentId" ? (
-                      <button
-                        style={{
-                          border: "none",
-                          backgroundColor: "white",
-                          color: "blue",
-                        }}
-                        onClick={() =>
-                          fixIdAndStatus(adjustment?.adjustmentDetails)
-                        }
-                      >
-                        {adjustment[header]}
-                      </button>
-                    ) : (
-                      adjustment[header]
-                    )}
-                  </td>
-                )
-              )}
-
+      <div className="table-container">
+        <Table bordered responsive className="m-0">
+          <thead className="table-header">
+            <tr>
+              {headers &&
+                headers.map((header, index) =>
+                  status === "REJECT" &&
+                  (header === "modifiedBy" || header === "modifiedAt") ? (
+                    <th key={index}>
+                      {header
+                        .replace("modified", "rejected")
+                        .replace(/^\w/, (c) => c.toUpperCase())}
+                    </th>
+                  ) : status === "OPEN" &&
+                    (header === "modifiedBy" ||
+                      header === "modifiedAt") ? null : (
+                    <th key={index}>
+                      {header.charAt(0).toUpperCase() + header.slice(1)}
+                    </th>
+                  )
+                )}
               {user.roles.includes("ADMIN") && status === "OPEN" && (
-                <td>
-                  <button
-                    className="btn btn-sm btn-success me-2"
-                    onClick={() =>
-                      submitRequest(adjustment?.adjustmentId, "ACCEPT")
-                    }
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className="btn btn-sm btn-danger"
-                    onClick={() =>
-                      submitRequest(adjustment?.adjustmentId, "REJECT")
-                    }
-                  >
-                    Reject
-                  </button>
-                </td>
+                <th>Actions</th>
               )}
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+
+          <tbody>
+            {dashData?.map((adjustment) => (
+              <tr key={adjustment?.adjustmentId}>
+                {headers.map((header, index) =>
+                  status === "OPEN" &&
+                  (header === "modifiedBy" ||
+                    header === "modifiedAt") ? null : (
+                    <td key={index}>
+                      {header === "adjustmentId" ? (
+                        <button
+                          style={{
+                            border: "none",
+                            backgroundColor: "white",
+                            color: "blue",
+                          }}
+                          onClick={() =>
+                            fixIdAndStatus(adjustment?.adjustmentDetails)
+                          }
+                        >
+                          {adjustment[header]}
+                        </button>
+                      ) : (
+                        adjustment[header]
+                      )}
+                    </td>
+                  )
+                )}
+                {user.roles.includes("ADMIN") && status === "OPEN" && (
+                  <td>
+                    <button
+                      className="btn btn-sm btn-success me-2"
+                      onClick={() =>
+                        submitRequest(adjustment?.adjustmentId, "ACCEPT")
+                      }
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() =>
+                        submitRequest(adjustment?.adjustmentId, "REJECT")
+                      }
+                    >
+                      Reject
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </div>
     </div>
   );
 };

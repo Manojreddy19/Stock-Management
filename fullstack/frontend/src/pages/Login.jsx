@@ -37,7 +37,7 @@ const Login = () => {
       if (result.roles.includes("ADMIN")) {
         navigate("/dashboard");
       } else if (result.roles.includes("USER")) {
-        navigate("/stockAdjustmentSelect");
+        navigate("/dashboard");
       } else {
         alert("Unauthorized role");
       }

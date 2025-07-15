@@ -28,8 +28,6 @@ const StockDownAdjustmentForm = () => {
 
   const [productSuggestions, setProductSuggestions] = useState([]);
   const [batchSuggestions, setBatchSuggestions] = useState([]);
-  const [activeProductIndex, setActiveProductIndex] = useState(-1);
-  const [activeBatchIndex, setActiveBatchIndex] = useState(-1);
 
   const headers = [
     "productId",
@@ -149,49 +147,48 @@ const StockDownAdjustmentForm = () => {
     setBatchSuggestions([]);
   };
 
- const submitAdjustments = async () => {
-  if (adjustments.length === 0) {
-    toast.error("Please add adjustments before submitting");
-    return;
-  }
-
-  const payload = {
-    adjustmentType,
-    amount,
-    createdBy,
-    adjustmentDetails: adjustments.map((item) => {
-      const [batch, batchId] = item.batchDetails.split("-");
-      return { ...item, batch, batchId };
-    }),
-  };
-
-  try {
-    const res = await axios.post(
-      `http://${ip}:8080/api/addAdjustment`,
-      payload,
-      {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      }
-    );
-    if (res.status === 201) {
-      toast.success(res.data.message);
-      setAdjustments([]);
-      setAmount(0);
+  const submitAdjustments = async () => {
+    if (adjustments.length === 0) {
+      toast.error("Please add adjustments before submitting");
+      return;
     }
-  } catch (err) {
-    toast.error(
-      "Submission failed: " +
-        (err?.response?.data?.message || "Unknown error")
-    );
-  }
-};
 
+    const payload = {
+      adjustmentType,
+      amount,
+      createdBy,
+      adjustmentDetails: adjustments.map((item) => {
+        const [batch, batchId] = item.batchDetails.split("-");
+        return { ...item, batch, batchId };
+      }),
+    };
+
+    try {
+      const res = await axios.post(
+        `http://${ip}:8080/api/addAdjustment`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        setAdjustments([]);
+        setAmount(0);
+      }
+    } catch (err) {
+      toast.error(
+        "Submission failed: " +
+          (err?.response?.data?.message || "Unknown error")
+      );
+    }
+  };
 
   return (
     <div className="container-fluid pb-5">
       <ToastContainer autoClose={1500} limit={1} />
-      <h3 className="mb-4">
+      <h3 className="mb-3">
         Stock Adjustment: {adjustmentType === "UP" ? "Increase" : "Decrease"}
       </h3>
 
@@ -306,7 +303,7 @@ const StockDownAdjustmentForm = () => {
         </div>
       </form>
 
-      <hr className="my-4" />
+      <hr className="my-3" />
 
       <div
         className="table-responsive"
@@ -315,7 +312,7 @@ const StockDownAdjustmentForm = () => {
         <DynamicTable headers={headers} data={adjustments} amount={amount} />
       </div>
 
-     <div className="fixed-bottom bg-white border-top p-3 text-end shadow">
+      <div className="fixed-bottom bg-white border-top p-3 text-end shadow">
         <button className="btn btn-success" onClick={submitAdjustments}>
           Submit Adjustments
         </button>

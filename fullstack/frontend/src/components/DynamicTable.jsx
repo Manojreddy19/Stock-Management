@@ -1,6 +1,6 @@
 const DynamicTable = ({ headers, data, amount = 0 }) => {
   return (
-    <div className="mt-5">
+    <div className="mt-3">
       <h4 className="mb-3">Added Adjustments</h4>
       <div className="table-responsive">
         <table className="table table-bordered table-striped">

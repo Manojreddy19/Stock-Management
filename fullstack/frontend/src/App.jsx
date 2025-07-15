@@ -1,12 +1,16 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import StockUpAdjustmentForm from "./pages/StockUpAdjustmentForm";
 import StockDownAdjustmentForm from "./pages/StockDownAdjustmentForm";
-import StockAdjustmentSelect from "./pages/StockAdjustmentSelect";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import "bootstrap/dist/css/bootstrap.min.css";
-import MainLayout from './layouts/mainLayout'
+import MainLayout from "./layouts/mainLayout";
 
 function AppRoutes() {
   const location = useLocation();
@@ -25,14 +29,7 @@ function AppRoutes() {
               </MainLayout>
             }
           />
-          <Route
-            path="/stockAdjustmentSelect"
-            element={
-              <MainLayout>
-                <StockAdjustmentSelect />
-              </MainLayout>
-            }
-          />
+
           <Route
             path="/adjustment-form-up"
             element={

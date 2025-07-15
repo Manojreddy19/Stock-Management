@@ -36,8 +36,8 @@ public class AdjustmentController {
 	public ResponseEntity<Response> addAdjustment(@RequestBody @Valid Adjustment adjustment) {
 		try {
 
-			adjustmentService.addAdjustment(adjustment);
-			Response response = new Response("201", "Adjustment Added Successfully");
+			long id=adjustmentService.addAdjustment(adjustment);
+			Response response = new Response("201", "Adjustment Id: " +id+" Added Successfully");
 
 			return ResponseEntity.status(201).body(response);
 
