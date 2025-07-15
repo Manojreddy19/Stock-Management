@@ -9,16 +9,16 @@ const Sidebar = () => {
 
   return (
     <div
-      className="d-flex flex-column vh-100 p-3 bg-dark text-white"
+      className="d-flex flex-column vh-100 p-3  text-black"
       style={{ width: "250px" }}
     >
       <h4 className="mb-4">Dashboard</h4>
       <Nav className="flex-column">
 
-        {/* Stock Up Section */}
+
         <Nav.Link
           onClick={() => setShowStockUpSubmenu((prev) => !prev)}
-          className="text-white d-flex justify-content-between align-items-center"
+          className="text-black d-flex justify-content-between align-items-center"
           style={{ cursor: "pointer" }}
         >
           <span>Stock UP</span>
@@ -27,15 +27,15 @@ const Sidebar = () => {
         {showStockUpSubmenu && (
           <div className="ms-3">
             <Nav.Link
-              onClick={() => navigate("/adjustment-form?type=UP")}
-              className="text-white-50"
+              onClick={() => navigate("/adjustment-form-up")}
+              className="text-black"
               style={{ cursor: "pointer" }}
             >
               ➤ Create
             </Nav.Link>
             <Nav.Link
               onClick={() => navigate("/dashboard")}
-              className="text-white-50"
+              className="text-black"
               style={{ cursor: "pointer" }}
             >
               ➤ Dashboard
@@ -43,10 +43,10 @@ const Sidebar = () => {
           </div>
         )}
 
-        {/* Stock Down Section */}
+
         <Nav.Link
           onClick={() => setShowStockDownSubmenu((prev) => !prev)}
-          className="text-white d-flex justify-content-between align-items-center mt-2"
+          className="text-black d-flex justify-content-between align-items-center mt-2"
           style={{ cursor: "pointer" }}
         >
           <span>Stock Down</span>
@@ -55,15 +55,15 @@ const Sidebar = () => {
         {showStockDownSubmenu && (
           <div className="ms-3">
             <Nav.Link
-              onClick={() => navigate("/adjustment-form?type=DOWN")}
-              className="text-white-50"
+              onClick={() => navigate("/adjustment-form-down")}
+              className="text-black"
               style={{ cursor: "pointer" }}
             >
               ➤ Create
             </Nav.Link>
             <Nav.Link
-              onClick={() => navigate("/dashboard")}
-              className="text-white-50"
+              onClick={() => navigate("/dashboard?type=DOWN")}
+              className="text-black"
               style={{ cursor: "pointer" }}
             >
               ➤ Dashboard

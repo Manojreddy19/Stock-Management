@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import AdjustmentForm from "./pages/AdjustmentForm";
+import StockUpAdjustmentForm from "./pages/StockUpAdjustmentForm";
+import StockDownAdjustmentForm from "./pages/StockDownAdjustmentForm";
 import StockAdjustmentSelect from "./pages/StockAdjustmentSelect";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
@@ -33,10 +34,18 @@ function AppRoutes() {
             }
           />
           <Route
-            path="/adjustment-form"
+            path="/adjustment-form-up"
             element={
               <MainLayout>
-                <AdjustmentForm />
+                <StockUpAdjustmentForm />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/adjustment-form-down"
+            element={
+              <MainLayout>
+                <StockDownAdjustmentForm />
               </MainLayout>
             }
           />

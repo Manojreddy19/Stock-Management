@@ -1,15 +1,17 @@
-
 const DynamicTable = ({ headers, data, amount = 0 }) => {
   return (
     <div className="mt-5">
       <h4 className="mb-3">Added Adjustments</h4>
       <div className="table-responsive">
         <table className="table table-bordered table-striped">
-          <thead className="table-dark">
+          <thead>
             <tr>
-              {headers && headers.map((header, index) => (
-                <th key={index}>{header}</th>
-              ))}
+              {headers &&
+                headers.map((header, index) => (
+                  <th key={index}>
+                    {header.charAt(0).toUpperCase() + header.slice(1)}
+                  </th>
+                ))}
             </tr>
           </thead>
           <tbody>
@@ -23,12 +25,16 @@ const DynamicTable = ({ headers, data, amount = 0 }) => {
               ))
             ) : (
               <tr>
-                <td colSpan={headers.length} className="text-center">No records added yet</td>
+                <td colSpan={headers.length} className="text-center">
+                  No records added yet
+                </td>
               </tr>
             )}
             {amount > 0 && (
               <tr>
-                <td colSpan={headers.length} className="text-end fw-bold">Total Amount: ₹ {amount.toFixed(2)}</td>
+                <td colSpan={headers.length} className="text-end fw-bold">
+                  Total Amount: ₹ {amount.toFixed(2)}
+                </td>
               </tr>
             )}
           </tbody>

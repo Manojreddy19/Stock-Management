@@ -1,18 +1,13 @@
-// Refactored AdjustmentForm.js with improved UI/UX, Bootstrap styling, and better UX patterns
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DynamicTable from "../components/DynamicTable";
 import { ip } from "../assets/utils";
 
-const AdjustmentForm = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const adjustmentType = queryParams.get("type");
+const StockDownAdjustmentForm = () => {
+  const adjustmentType = "UP";
   const user = JSON.parse(localStorage.getItem("user"));
   const createdBy = user?.username || "unknown";
 
@@ -49,25 +44,15 @@ const AdjustmentForm = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(`http://${ip}:8080/api/getStocks`, {
-          method: "GET",
-          credentials: "include", 
-          headers: {
-            Accept: "application/json", 
-          },
+          credentials: "include",
         });
-
-        if (!response.ok) {
-          throw new Error("Unauthorized or failed");
-        }
-
         const result = await response.json();
         setFetchedData(result);
       } catch (error) {
+        console.log(error);
         toast.error("Failed to fetch stock data");
-        console.error("Fetch error:", error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -164,51 +149,57 @@ const AdjustmentForm = () => {
     setBatchSuggestions([]);
   };
 
-  const submitAdjustments = async () => {
-    const payload = {
-      adjustmentType,
-      amount,
-      createdBy,
-      adjustmentDetails: adjustments.map((item) => {
-        const [batch, batchId] = item.batchDetails.split("-");
-        return { ...item, batch, batchId };
-      }),
-    };
+ const submitAdjustments = async () => {
+  if (adjustments.length === 0) {
+    toast.error("Please add adjustments before submitting");
+    return;
+  }
 
-    try {
-      const res = await axios.post(
-        `http://${ip}:8080/api/addAdjustment`,
-        payload,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      if (res.status === 201) {
-        toast.success(res.data.message);
-        setAdjustments([]);
-        setAmount(0);
-      }
-    } catch (err) {
-      toast.error(
-        "Submission failed: " +
-          (err?.response?.data?.message || "Unknown error")
-      );
-    }
+  const payload = {
+    adjustmentType,
+    amount,
+    createdBy,
+    adjustmentDetails: adjustments.map((item) => {
+      const [batch, batchId] = item.batchDetails.split("-");
+      return { ...item, batch, batchId };
+    }),
   };
 
+  try {
+    const res = await axios.post(
+      `http://${ip}:8080/api/addAdjustment`,
+      payload,
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      }
+    );
+    if (res.status === 201) {
+      toast.success(res.data.message);
+      setAdjustments([]);
+      setAmount(0);
+    }
+  } catch (err) {
+    toast.error(
+      "Submission failed: " +
+        (err?.response?.data?.message || "Unknown error")
+    );
+  }
+};
+
+
   return (
-    <div className="container mt-5">
+    <div className="container-fluid pb-5">
       <ToastContainer autoClose={1500} limit={1} />
       <h3 className="mb-4">
         Stock Adjustment: {adjustmentType === "UP" ? "Increase" : "Decrease"}
       </h3>
 
       <form autoComplete="off" onSubmit={handleAdd} className="row g-3">
-        <div className="col-md-4 position-relative">
+        <div className="col-md-3 position-relative">
           <label className="form-label">Product ID</label>
           <input
-            className="form-control"
+            className="form-control form-control-sm"
             name="productId"
             value={formData.productId}
             onChange={handleProductChange}
@@ -229,10 +220,10 @@ const AdjustmentForm = () => {
           )}
         </div>
 
-        <div className="col-md-4 position-relative">
+        <div className="col-md-3 position-relative">
           <label className="form-label">Batch ID</label>
           <input
-            className="form-control"
+            className="form-control form-control-sm"
             name="batchDetails"
             value={formData.batchDetails}
             onChange={(e) =>
@@ -260,7 +251,9 @@ const AdjustmentForm = () => {
           <input
             type="number"
             name="quantity"
-            className={`form-control ${quantityError ? "is-invalid" : ""}`}
+            className={`form-control form-control-sm ${
+              quantityError ? "is-invalid" : ""
+            }`}
             value={formData.quantity}
             onChange={handleInputChange}
             required
@@ -276,7 +269,7 @@ const AdjustmentForm = () => {
           <label className="form-label">Expiry</label>
           <input
             type="date"
-            className="form-control"
+            className="form-control form-control-sm"
             value={formData.expiryDate}
             readOnly
             required
@@ -289,7 +282,7 @@ const AdjustmentForm = () => {
             type="number"
             step="0.01"
             name="mrp"
-            className="form-control"
+            className="form-control form-control-sm"
             value={formData.mrp}
             onChange={handleInputChange}
             required
@@ -300,14 +293,14 @@ const AdjustmentForm = () => {
           <label className="form-label">Amount</label>
           <input
             type="number"
-            className="form-control"
+            className="form-control form-control-sm"
             value={formData.amount}
             readOnly
           />
         </div>
 
-        <div className="col-12">
-          <button type="submit" className="btn btn-primary">
+        <div className="col-md-2 d-flex align-items-end">
+          <button type="submit" className="btn btn-sm btn-primary w-100">
             Add
           </button>
         </div>
@@ -315,10 +308,15 @@ const AdjustmentForm = () => {
 
       <hr className="my-4" />
 
-      <DynamicTable headers={headers} data={adjustments} amount={amount} />
+      <div
+        className="table-responsive"
+        style={{ maxHeight: "300px", overflowY: "auto" }}
+      >
+        <DynamicTable headers={headers} data={adjustments} amount={amount} />
+      </div>
 
-      <div className="text-end">
-        <button className="btn btn-success mt-3" onClick={submitAdjustments}>
+     <div className="fixed-bottom bg-white border-top p-3 text-end shadow">
+        <button className="btn btn-success" onClick={submitAdjustments}>
           Submit Adjustments
         </button>
       </div>
@@ -326,4 +324,4 @@ const AdjustmentForm = () => {
   );
 };
 
-export default AdjustmentForm;
+export default StockDownAdjustmentForm;
