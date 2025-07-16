@@ -5,7 +5,8 @@ import axios from "axios";
 import Table from "react-bootstrap/Table";
 import { ip } from "../assets/utils.js";
 import { useLocation } from "react-router-dom";
-import "../styles/DashboardTable.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DashboardTable = ({ headers, data, fetchData }) => {
   const location = useLocation();
@@ -54,10 +55,14 @@ const DashboardTable = ({ headers, data, fetchData }) => {
       );
 
       console.log("Status updated successfully", response?.data);
+      console.log(response)
+        toast.success("Status updated successfully",{ position: 'bottom-left'});
+
       fetchData();
       filterAdjustmentsByStatus("OPEN");
     } catch (error) {
       console.error("Failed to update status", error);
+      toast.error("Failed to update status", { position: 'bottom-left'});
     }
   };
 
@@ -82,6 +87,7 @@ const DashboardTable = ({ headers, data, fetchData }) => {
 
   return (
     <div>
+      <ToastContainer autoClose={1500} limit={1} />
       <h4 className="mb-4">
         {adjustmentType === "UP" ? "Stock Up" : "Stock Down"} Dashboard
       </h4>

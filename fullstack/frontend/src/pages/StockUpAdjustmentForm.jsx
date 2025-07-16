@@ -31,10 +31,11 @@ const StockDownAdjustmentForm = () => {
 
   const headers = [
     "productId",
-    "batchDetails",
+    "batch",
+    "batchId",
     "quantity",
     "expiryDate",
-    "mrp",
+    "MRP",
     "amount",
   ];
 
@@ -48,7 +49,7 @@ const StockDownAdjustmentForm = () => {
         setFetchedData(result);
       } catch (error) {
         console.log(error);
-        toast.error("Failed to fetch stock data");
+        toast.error("Failed to fetch stock data", { position: "bottom-left" });
       }
     };
     fetchData();
@@ -77,10 +78,14 @@ const StockDownAdjustmentForm = () => {
     e.preventDefault();
     const { productId, batchDetails, quantity, amount } = formData;
     if (!productId || !batchDetails || !quantity || !amount)
-      return toast.error("All fields are required");
+      return toast.error("All fields are required", {
+        position: "bottom-left",
+      });
 
     if (adjustmentType === "DOWN" && parseInt(quantity) > availableQty) {
-      return toast.error("Quantity exceeds available stock");
+      return toast.error("Quantity exceeds available stock", {
+        position: "bottom-left",
+      });
     }
 
     if (
@@ -90,13 +95,22 @@ const StockDownAdjustmentForm = () => {
           item.batchDetails === batchDetails
       )
     ) {
-      return toast.error("Duplicate record");
+      return toast.error("Duplicate record", { position: "bottom-left" });
     }
+    const [batch, batchId] = formData.batchDetails.split("-");
+    const newEntry = {
+      productId: formData.productId,
+      batch: batch,
+      batchId: batchId,
+      quantity: formData.quantity,
+      expiryDate: formData.expiryDate,
+      mrp: formData.mrp,
+      amount: formData.amount,
+    };
 
-    const newEntry = { ...formData, productId: productId.toUpperCase() };
     setAdjustments((prev) => [...prev, newEntry]);
     setAmount((prev) => prev + parseFloat(amount));
-    toast.success("Added successfully");
+    toast.success("Added successfully", { position: "bottom-left" });
     resetForm();
   };
 
@@ -149,7 +163,9 @@ const StockDownAdjustmentForm = () => {
 
   const submitAdjustments = async () => {
     if (adjustments.length === 0) {
-      toast.error("Please add adjustments before submitting");
+      toast.error("Please add adjustments before submitting", {
+        position: "bottom-left",
+      });
       return;
     }
 
@@ -157,10 +173,8 @@ const StockDownAdjustmentForm = () => {
       adjustmentType,
       amount,
       createdBy,
-      adjustmentDetails: adjustments.map((item) => {
-        const [batch, batchId] = item.batchDetails.split("-");
-        return { ...item, batch, batchId };
-      }),
+      adjustmentDetails: adjustments
+
     };
 
     try {
@@ -173,14 +187,15 @@ const StockDownAdjustmentForm = () => {
         }
       );
       if (res.status === 201) {
-        toast.success(res.data.message);
+        toast.success(res.data.message, { position: "bottom-left" });
         setAdjustments([]);
         setAmount(0);
       }
     } catch (err) {
       toast.error(
         "Submission failed: " +
-          (err?.response?.data?.message || "Unknown error")
+          (err?.response?.data?.message || "Unknown error",
+          { position: "bottom-left" })
       );
     }
   };
