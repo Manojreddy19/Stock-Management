@@ -35,25 +35,27 @@ const StockDownAdjustmentForm = () => {
     "batchId",
     "quantity",
     "expiryDate",
-    "MRP",
+    "mrp",
     "amount",
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://${ip}:8080/api/getStocks`, {
-          credentials: "include",
-        });
-        const result = await response.json();
-        setFetchedData(result);
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to fetch stock data", { position: "bottom-left" });
-      }
-    };
-    fetchData();
-  }, []);
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://10.129.241.68:8080/api/getStocks", {
+        withCredentials: true, 
+      });
+
+      setFetchedData(response.data); 
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch stock data", { position: "bottom-left" });
+    }
+  };
+
+  fetchData();
+}, []);
 
   const allProductIds = [...new Set(fetchedData.map((item) => item.productId))];
 

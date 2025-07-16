@@ -24,6 +24,7 @@ const Login = () => {
       const response = await fetch(`http://${ip}:8080/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(credentials),
       });
 

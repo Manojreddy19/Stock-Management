@@ -37,23 +37,23 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 
 	@Override
 	@Transactional
-	public void updateStatus(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException {
+	public void updateStatus(Long adjustmentId, Status status, String modifiedBy, String remarks)
+			throws StockManagementException {
 
 		try {
 			Adjustment adjustment = adjustmentDao.getAdjustmentById(adjustmentId);
 			adjustment.setModifiedBy(modifiedBy);
+			
 			if (adjustment.getStatus() != Status.OPEN) {
 				throw new StockManagementException("Adjustment Alredy Closed");
 			}
-			if (status.getValue() == 'A') {
-				adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy);
+			adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy, remarks);
+			if (status == Status.ACCEPT) {
 				if (adjustment.getAdjustmentType() == AdjustmentType.UP) {
 					stockService.stockUp(adjustment);
 				} else {
 					stockService.stockDown(adjustment);
 				}
-			} else if (status == Status.REJECT) {
-				adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy);
 			}
 		} catch (Exception e) {
 			throw new StockManagementException(e.getMessage());

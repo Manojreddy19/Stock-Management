@@ -1,6 +1,7 @@
 package com.example.stockmanagement.config;
 
 import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,12 +17,30 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration {
+public class SecurityConfiguration implements WebMvcConfigurer {
 
+    // ✅ GLOBAL CORS config for controllers like /login
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+            .allowedOriginPatterns(
+                "http://localhost:5173",
+                "http://10.129.241.68:5173",
+                "http://10.129.241.140:5173",
+                "http://10.129.241.131:5173"
+            )
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true);
+    }
+
+    // ✅ In-memory users
     @Bean
     public InMemoryUserDetailsManager users() {
         UserDetails user = User.withDefaultPasswordEncoder()
@@ -39,14 +58,15 @@ public class SecurityConfiguration {
         return new InMemoryUserDetailsManager(user, admin);
     }
 
+    // ✅ Spring Security config
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+            .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .antMatchers("/login").permitAll()
-                //.antMatchers("/api/getStocks").hasAnyRole("ADMIN", "USER")
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             )
             .formLogin().disable();
 
@@ -62,16 +82,21 @@ public class SecurityConfiguration {
                 .build();
     }
 
+    // ✅ CORS for Spring Security filters
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:5173",
-            "http://10.129.241.140:5173"
+            "http://10.129.241.68:5173",
+            "http://10.129.241.140:5173",
+            "http://10.129.241.131:5173"
         ));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(true); // ✅ Must be true for cookie-based sessions
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

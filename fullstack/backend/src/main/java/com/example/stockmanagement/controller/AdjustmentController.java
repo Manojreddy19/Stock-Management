@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class AdjustmentController {
 	StockService stockService;
 
 	@PostMapping("/addAdjustment")
-	@CrossOrigin(origins = "*")
+//	@CrossOrigin(origins = "*")
 	public ResponseEntity<Response> addAdjustment(@RequestBody @Valid Adjustment adjustment) {
 		try {
 
@@ -49,7 +50,7 @@ public class AdjustmentController {
 	}
 
 	@GetMapping("/getAdjustments")
-	@CrossOrigin(origins = "*")
+//	@CrossOrigin(origins = "*")
 	public ResponseEntity<List<Adjustment>> getAdjustments() {
 		List<Adjustment> adjustments = null;
 		try {
@@ -62,10 +63,11 @@ public class AdjustmentController {
 
 	}
 
-	@CrossOrigin(origins = "*")
-	@GetMapping("/getStocks")
-	public ResponseEntity<List<StockMaster>> getStocks() {
+//	@CrossOrigin(origins = "*")
+	@GetMapping("/getStocks" )
+	public ResponseEntity<List<StockMaster>> getStocks(@CookieValue(value = "JSESSIONID", required = false) String jSessionId) {
 
+		System.out.println(jSessionId);
 		List<StockMaster> stock = null;
 		try {
 			stock = stockService.getAllStocks();
@@ -79,7 +81,7 @@ public class AdjustmentController {
 	}
 
 	@PostMapping("/updateStatus")
-	@CrossOrigin(origins = "*")
+//	@CrossOrigin(origins = "*")
 	public ResponseEntity<Response> updateStatus(@RequestBody Map<String, String> requestParameters) {
 		try {
 
@@ -87,8 +89,9 @@ public class AdjustmentController {
 			String statusChar = requestParameters.get("status");
 			Status status = Status.valueOf(statusChar);
 			String modifiedBy = requestParameters.get("modifiedBy");
-
-			adjustmentService.updateStatus(adjustmentId, status, modifiedBy);
+			String remarks=requestParameters.get("remarks");
+			System.out.println("remarks "+remarks);
+			adjustmentService.updateStatus(adjustmentId, status, modifiedBy,remarks);
 
 		} catch (StockManagementException e) {
 			e.printStackTrace();

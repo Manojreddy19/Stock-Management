@@ -11,10 +11,16 @@ import "react-toastify/dist/ReactToastify.css";
 const DashboardTable = ({ headers, data, fetchData }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const adjustmentType = queryParams.get("type")?.toUpperCase() || "UP"; // default to "UP"
+  const adjustmentType = queryParams.get("type")?.toUpperCase() || "UP"; 
 
   const [dashData, setDashData] = useState([]);
+  const [response, setResponse] = useState({
+    adjustmentId:"",
+    status:"",
+    remark:""
+  });
   const [showPopUp, setShowPopUp] = useState(false);
+  const [remarkPopUp, setRemarkPopUp] = useState(false);
   const [details, setDetails] = useState([]);
   const [status, setStatus] = useState("OPEN");
 
@@ -35,12 +41,14 @@ const DashboardTable = ({ headers, data, fetchData }) => {
     setDashData(filteredData || []);
   };
 
-  const submitRequest = async (adjustmentId, status) => {
+  const submitRequest = async (adjustmentId, status,remarks=null) => {
     const payload = {
       adjustmentId,
       status,
       modifiedBy,
+      remarks
     };
+    console.log(payload);
 
     try {
       const response = await axios.post(
@@ -66,7 +74,7 @@ const DashboardTable = ({ headers, data, fetchData }) => {
     }
   };
 
-  const fixIdAndStatus = async (Details) => {
+  const setAdjustmentsAndStatus = async (Details) => {
     if (Details.length > 0) {
       setDetails(Details);
       setShowPopUp(true);
@@ -84,6 +92,25 @@ const DashboardTable = ({ headers, data, fetchData }) => {
     "amount",
     "generatedBatchId",
   ];
+const handleChange = (e) => {
+    const value = e.target.value;
+    setResponse({...response,remark:value});
+  };
+const submitRemark=()=>{
+ setRemarkPopUp(false);
+ submitRequest(response.adjustmentId,response.status,response.remark);
+ setResponse({
+    adjustmentId:"",
+    status:"",
+    remark:""
+  });
+
+}
+  const addRemarkAndSend=(adjustment, stat)=>
+  {
+    setRemarkPopUp(true);
+    setResponse({...response,adjustmentId:adjustment,status:stat})
+  }
 
   return (
     <div>
@@ -116,6 +143,14 @@ const DashboardTable = ({ headers, data, fetchData }) => {
       <div id="model">
         <PopUp showPopUp={showPopUp} closePopUp={() => setShowPopUp(false)}>
           <DynamicTable headers={detailHeaders} data={details} />
+        </PopUp>
+      </div>
+          <div id="model1">
+        <PopUp showPopUp={remarkPopUp} closePopUp={() => setRemarkPopUp(false)}>
+        < div style={{display:"flex",flexDirection:"column",gap:"5px" ,border:"1px solid black"}}>
+         <textarea id="w3review" name="w3review" rows="4" cols="50" onChange={handleChange} value={response.remark}/>
+         <button style={{backgroundColor:"#008CBA"}} name="submit"  onClick={submitRemark}>submit</button>
+        </div>
         </PopUp>
       </div>
 
@@ -162,7 +197,7 @@ const DashboardTable = ({ headers, data, fetchData }) => {
                             color: "blue",
                           }}
                           onClick={() =>
-                            fixIdAndStatus(adjustment?.adjustmentDetails)
+                            setAdjustmentsAndStatus(adjustment?.adjustmentDetails)
                           }
                         >
                           {adjustment[header]}
@@ -186,7 +221,8 @@ const DashboardTable = ({ headers, data, fetchData }) => {
                     <button
                       className="btn btn-sm btn-danger"
                       onClick={() =>
-                        submitRequest(adjustment?.adjustmentId, "REJECT")
+                        addRemarkAndSend(adjustment?.adjustmentId, "REJECT")
+                        // submitRequest(adjustment?.adjustmentId, "REJECT")
                       }
                     >
                       Reject

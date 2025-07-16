@@ -40,10 +40,10 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	}
 
 	@Override
-	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException {
+	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy,String remarks) throws StockManagementException {
 		try {
 			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToUpdateOnApproval(adjustmentId, status,
-					modifiedBy);
+					modifiedBy,remarks);
 			int updatedRows = namedParameterJdbcTemplate.update(UPDATE_STATUS_AND_MODIFIEDBY, params);
 			if (updatedRows > 0)
 				return;
@@ -126,7 +126,7 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 					new AdjustmentRowMapper());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new StockManagementException("Error In dao");
+			throw new StockManagementException("Error In dao No Adjustments found");
 		}
 	}
 

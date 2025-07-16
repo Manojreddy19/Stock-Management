@@ -16,7 +16,7 @@ public interface AdjustmentDao {
 
 	long addAdjustment(Adjustment adjustmentHeader) throws StockManagementException;
 
-	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy) throws StockManagementException;
+	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy, String remarks) throws StockManagementException;
 
 	public List<Adjustment> getAdjustments() throws StockManagementException;
 
