@@ -18,6 +18,13 @@ public class AdjustmentCriteria {
 	public AdjustmentCriteria() {
 	}
 
+	@Override
+	public String toString() {
+		return "AdjustmentCriteria [adjustmentId=" + adjustmentId + ", status=" + status + ", adjustmentType="
+				+ adjustmentType + ", createdFrom=" + createdFrom + ", createdTo=" + createdTo + ", limitFrom="
+				+ limitFrom + ", noOfRows=" + noOfRows + ", detailsRequired=" + detailsRequired + "]";
+	}
+
 	public AdjustmentCriteria(Long adjustmentId, Status status, AdjustmentType adjustmentType, Date createdFrom,
 			Date createdTo, Long limitFrom, Long noOfRows, boolean detailsRequired) {
 		this.adjustmentId = adjustmentId;

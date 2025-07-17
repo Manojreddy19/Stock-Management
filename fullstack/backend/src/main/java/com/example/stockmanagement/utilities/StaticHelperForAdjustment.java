@@ -60,7 +60,6 @@ public class StaticHelperForAdjustment {
 	
 	public static String queryForGetAdjustmentCount(String sql,AdjustmentCriteria adjustmentCriteria)
 	{
-		sql+="WHERE AdjustmentType="+String.valueOf( adjustmentCriteria.getAdjustmentType().getValue());
 		sql+="AND Status="+String.valueOf(adjustmentCriteria.getStatus().getValue()) ;
 		if(adjustmentCriteria.getAdjustmentId()!=null)
 		{

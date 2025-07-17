@@ -41,10 +41,11 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	}
 
 	@Override
-	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy,String remarks) throws StockManagementException {
+	public void updateAdjustment(Long adjustmentId, Status status, String modifiedBy, String remarks)
+			throws StockManagementException {
 		try {
 			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToUpdateOnApproval(adjustmentId, status,
-					modifiedBy,remarks);
+					modifiedBy, remarks);
 			int updatedRows = namedParameterJdbcTemplate.update(UPDATE_STATUS_AND_MODIFIEDBY, params);
 			if (updatedRows > 0)
 				return;
@@ -63,12 +64,11 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 					new AdjustmentRowMapper());
 			if (!getAllAdjustments.isEmpty())
 				return getAllAdjustments;
-			
-		}catch(Exception e)
-		{
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		throw new StockManagementException("No adjustments to show");
 	}
 
@@ -95,7 +95,6 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 					generatedBid);
 			int updatedRows = namedParameterJdbcTemplate.update(UPDATE_GENERATEDBID, params);
 
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new StockManagementException("Cannot update Generated Batch Id");
@@ -107,15 +106,14 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	public List<AdjustmentDetail> getAdjustmentDetails(long adjustmentId) throws StockManagementException {
 		try {
 			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToAdjustmentId(adjustmentId);
-			List<AdjustmentDetail> getAllAdjustmentDetails = namedParameterJdbcTemplate.query(SELECT_ALL_ADJUSTMENT_DETAILS,
-					params, new AdjustmentDetailRowMapper());
-				return getAllAdjustmentDetails;
-			
-		}catch(Exception e)
-		{
+			List<AdjustmentDetail> getAllAdjustmentDetails = namedParameterJdbcTemplate
+					.query(SELECT_ALL_ADJUSTMENT_DETAILS, params, new AdjustmentDetailRowMapper());
+			return getAllAdjustmentDetails;
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		throw new StockManagementException("No adjustment Details to show");
 	}
 
@@ -134,12 +132,30 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	@Override
 	public long getAdjustmentCount(AdjustmentCriteria adjustmentCriteria) {
 		try {
-			String query=StaticHelperForAdjustment.queryForGetAdjustmentCount(GET_ADJUSTMENT_COUNT, adjustmentCriteria);
-			return namedParameterJdbcTemplate.queryForObject(query,null, Long.class);
-			
-			
-		}catch(Exception e)
-		{
+			System.out.println("In DAO"+adjustmentCriteria);
+			MapSqlParameterSource params = new MapSqlParameterSource();
+			System.out.println("Here"+adjustmentCriteria);
+			params.addValue("AdjustmentType", String.valueOf(adjustmentCriteria.getAdjustmentType().getValue()));
+			params.addValue("Status", String.valueOf(adjustmentCriteria.getStatus().getValue()));
+			StringBuilder query = new StringBuilder(GET_ADJUSTMENT_COUNT);
+
+			if (adjustmentCriteria.getAdjustmentId() != null) {
+				query.append(" AND AdjustmentId=:AdjustmentId ");
+				params.addValue(" AdjustmentId ", adjustmentCriteria.getAdjustmentId());
+
+			}
+			if (adjustmentCriteria.getCreatedFrom() != null && adjustmentCriteria.getCreatedTo() != null) {
+				query.append("AND CreatedAt BETWEEN :from AND :to");
+				params.addValue("from", adjustmentCriteria.getCreatedFrom());
+				params.addValue("to", adjustmentCriteria.getCreatedTo());
+
+			}
+			System.out.println(query.toString());
+
+			return namedParameterJdbcTemplate.queryForObject(query.toString(), params, Long.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
 			throw new StockManagementException(e.getMessage());
 		}
 

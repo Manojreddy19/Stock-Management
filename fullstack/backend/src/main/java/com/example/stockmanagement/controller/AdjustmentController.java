@@ -1,5 +1,7 @@
 package com.example.stockmanagement.controller;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +10,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.stockmanagement.domain.Adjustment;
+import com.example.stockmanagement.domain.AdjustmentCriteria;
 import com.example.stockmanagement.domain.Response;
 import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.service.AdjustmentService;
 import com.example.stockmanagement.service.StockService;
+import com.example.stockmanagement.utilities.AdjustmentType;
 import com.example.stockmanagement.utilities.Status;
 
 @RestController
@@ -37,8 +40,8 @@ public class AdjustmentController {
 	public ResponseEntity<Response> addAdjustment(@RequestBody @Valid Adjustment adjustment) {
 		try {
 
-			long id=adjustmentService.addAdjustment(adjustment);
-			Response response = new Response("201", "Adjustment Id: " +id+" Added Successfully");
+			long id = adjustmentService.addAdjustment(adjustment);
+			Response response = new Response("201", "Adjustment Id: " + id + " Added Successfully");
 
 			return ResponseEntity.status(201).body(response);
 
@@ -64,8 +67,9 @@ public class AdjustmentController {
 	}
 
 //	@CrossOrigin(origins = "*")
-	@GetMapping("/getStocks" )
-	public ResponseEntity<List<StockMaster>> getStocks(@CookieValue(value = "JSESSIONID", required = false) String jSessionId) {
+	@GetMapping("/getStocks")
+	public ResponseEntity<List<StockMaster>> getStocks(
+			@CookieValue(value = "JSESSIONID", required = false) String jSessionId) {
 
 		System.out.println(jSessionId);
 		List<StockMaster> stock = null;
@@ -89,9 +93,9 @@ public class AdjustmentController {
 			String statusChar = requestParameters.get("status");
 			Status status = Status.valueOf(statusChar);
 			String modifiedBy = requestParameters.get("modifiedBy");
-			String remarks=requestParameters.get("remarks");
-			System.out.println("remarks "+remarks);
-			adjustmentService.updateStatus(adjustmentId, status, modifiedBy,remarks);
+			String remarks = requestParameters.get("remarks");
+			System.out.println("remarks " + remarks);
+			adjustmentService.updateStatus(adjustmentId, status, modifiedBy, remarks);
 
 		} catch (StockManagementException e) {
 			e.printStackTrace();
@@ -102,8 +106,29 @@ public class AdjustmentController {
 
 	}
 
+	@GetMapping("/test")
+	public void test() {
+		System.out.println("Here");
+		AdjustmentCriteria ad = new AdjustmentCriteria();
+
+		Date currentDate = new Date(); // current date
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(currentDate);
+		cal.add(Calendar.DAY_OF_MONTH, -5); // subtract 5 days
+
+		Date fiveDaysAgo = cal.getTime();
+		System.out.println("Current: " + currentDate);
+		System.out.println("5 Days Ago: " + fiveDaysAgo);
+		ad.setCreatedFrom(fiveDaysAgo);
+		
+		ad.setCreatedTo(new Date());
+		ad.setAdjustmentType(AdjustmentType.UP);
+		ad.setStatus(Status.ACCEPT);
+		long val = adjustmentService.getAdjustmentsCount(ad);
+		System.out.println(val);
+	}
+
 }
 
 //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //System.out.println( auth.getPrincipal());
-

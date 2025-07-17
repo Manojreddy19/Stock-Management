@@ -80,6 +80,8 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 	@Override
 	public long getAdjustmentsCount(AdjustmentCriteria adjustmentCriteria) {
 		try {	
+			System.out.println(adjustmentCriteria);
+			System.out.println(adjustmentDao);
 			return adjustmentDao.getAdjustmentCount(adjustmentCriteria);			
 		}catch(StockManagementException e)
 		{
