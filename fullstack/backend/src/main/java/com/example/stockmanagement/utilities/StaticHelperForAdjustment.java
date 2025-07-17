@@ -3,6 +3,7 @@ package com.example.stockmanagement.utilities;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import com.example.stockmanagement.domain.Adjustment;
+import com.example.stockmanagement.domain.AdjustmentCriteria;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 
 public class StaticHelperForAdjustment {
@@ -55,6 +56,25 @@ public class StaticHelperForAdjustment {
 		params.addValue("ExpiryDate", detail.getExpiryDate());
 		params.addValue("Amount", detail.getAmount());
 		return params;
+	}
+	
+	public static String queryForGetAdjustmentCount(String sql,AdjustmentCriteria adjustmentCriteria)
+	{
+		sql+="WHERE AdjustmentType="+String.valueOf( adjustmentCriteria.getAdjustmentType().getValue());
+		sql+="AND Status="+String.valueOf(adjustmentCriteria.getStatus().getValue()) ;
+		if(adjustmentCriteria.getAdjustmentId()!=null)
+		{
+			sql+="AND AdjustmentId="+ String.valueOf(adjustmentCriteria.getAdjustmentId());
+		}
+		if(adjustmentCriteria.getCreatedFrom()!=null && adjustmentCriteria.getCreatedTo()!=null)
+		{
+			sql+="AND CreatedAT BETWEEN "+adjustmentCriteria.getCreatedFrom()
+			+" And "+adjustmentCriteria.getCreatedTo();
+		}
+
+		
+		
+		return sql+";";
 	}
 
 }

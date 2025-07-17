@@ -154,9 +154,9 @@ const submitRemark=()=>{
         </PopUp>
       </div>
 
-      <div className="table-container">
-        <Table bordered responsive className="m-0">
-          <thead className="table-header">
+      <div className="table-container overflow-auto" style={{ maxHeight: '60vh' }}>
+        <Table bordered responsive className="m-0" size="sm">
+          <thead className="table-header position-sticky top-0 bg-light">
             <tr>
               {headers &&
                 headers.map((header, index) =>
@@ -193,8 +193,9 @@ const submitRemark=()=>{
                         <button
                           style={{
                             border: "none",
-                            backgroundColor: "white",
+                            backgroundColor: "transparent", // Use transparent for better look
                             color: "blue",
+                            padding: 0,
                           }}
                           onClick={() =>
                             setAdjustmentsAndStatus(adjustment?.adjustmentDetails)
@@ -222,7 +223,6 @@ const submitRemark=()=>{
                       className="btn btn-sm btn-danger"
                       onClick={() =>
                         addRemarkAndSend(adjustment?.adjustmentId, "REJECT")
-                        // submitRequest(adjustment?.adjustmentId, "REJECT")
                       }
                     >
                       Reject

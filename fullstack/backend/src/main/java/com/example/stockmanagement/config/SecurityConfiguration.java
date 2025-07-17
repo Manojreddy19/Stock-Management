@@ -25,7 +25,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration implements WebMvcConfigurer {
 
-    // ✅ GLOBAL CORS config for controllers like /login
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
@@ -40,7 +39,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
             .allowCredentials(true);
     }
 
-    // ✅ In-memory users
     @Bean
     public InMemoryUserDetailsManager users() {
         UserDetails user = User.withDefaultPasswordEncoder()
@@ -58,7 +56,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         return new InMemoryUserDetailsManager(user, admin);
     }
 
-    // ✅ Spring Security config
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -82,7 +79,6 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                 .build();
     }
 
-    // ✅ CORS for Spring Security filters
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -96,7 +92,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true); // ✅ Must be true for cookie-based sessions
+        configuration.setAllowCredentials(true); 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.stockmanagement.dao.AdjustmentDao;
 import com.example.stockmanagement.domain.Adjustment;
+import com.example.stockmanagement.domain.AdjustmentCriteria;
 import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.service.AdjustmentService;
 import com.example.stockmanagement.service.StockService;
@@ -71,6 +72,17 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 			}
 			return adjustments;
 		} catch (Exception e) {
+			throw new StockManagementException(e.getMessage());
+		}
+
+	}
+
+	@Override
+	public long getAdjustmentsCount(AdjustmentCriteria adjustmentCriteria) {
+		try {	
+			return adjustmentDao.getAdjustmentCount(adjustmentCriteria);			
+		}catch(StockManagementException e)
+		{
 			throw new StockManagementException(e.getMessage());
 		}
 

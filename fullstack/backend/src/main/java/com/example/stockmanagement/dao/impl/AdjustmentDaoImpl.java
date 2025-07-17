@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.example.stockmanagement.dao.AdjustmentDao;
 import com.example.stockmanagement.dao.queries.AdjustmentQueries;
 import com.example.stockmanagement.domain.Adjustment;
+import com.example.stockmanagement.domain.AdjustmentCriteria;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.utilities.AdjustmentDetailRowMapper;
@@ -128,6 +129,20 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 			e.printStackTrace();
 			throw new StockManagementException("Error In dao No Adjustments found");
 		}
+	}
+
+	@Override
+	public long getAdjustmentCount(AdjustmentCriteria adjustmentCriteria) {
+		try {
+			String query=StaticHelperForAdjustment.queryForGetAdjustmentCount(GET_ADJUSTMENT_COUNT, adjustmentCriteria);
+			return namedParameterJdbcTemplate.queryForObject(query,null, Long.class);
+			
+			
+		}catch(Exception e)
+		{
+			throw new StockManagementException(e.getMessage());
+		}
+
 	}
 
 }

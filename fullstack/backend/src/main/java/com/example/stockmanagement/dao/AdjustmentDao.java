@@ -3,11 +3,14 @@ package com.example.stockmanagement.dao;
 import java.util.List;
 
 import com.example.stockmanagement.domain.Adjustment;
+import com.example.stockmanagement.domain.AdjustmentCriteria;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.utilities.Status;
 
 public interface AdjustmentDao {
+	
+	public long getAdjustmentCount(AdjustmentCriteria adjustmentCriteria);
 
 	void addAdjustmentDetails(long id, List<AdjustmentDetail> adjustment) throws StockManagementException;
 
