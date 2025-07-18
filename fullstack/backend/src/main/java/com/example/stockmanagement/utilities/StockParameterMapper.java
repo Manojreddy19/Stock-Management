@@ -53,5 +53,11 @@ public class StockParameterMapper {
 		params.addValue("ProductId", productId);
 		return params;
 	}
+	public MapSqlParameterSource mapProductIdAndBatchIdParameter(String productId, Long batchId) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("productId", productId);
+		params.addValue("batchId", batchId);
+		return params;
+	}
 
 }

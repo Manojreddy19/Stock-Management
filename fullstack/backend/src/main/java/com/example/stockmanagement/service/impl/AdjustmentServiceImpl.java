@@ -37,47 +37,6 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 	}
 
 	@Override
-	@Transactional
-	public void updateStatus(Long adjustmentId, Status status, String modifiedBy, String remarks)
-			throws StockManagementException {
-
-		try {
-			Adjustment adjustment = adjustmentDao.getAdjustmentById(adjustmentId);
-			adjustment.setModifiedBy(modifiedBy);
-			
-			if (adjustment.getStatus() != Status.OPEN) {
-				throw new StockManagementException("Adjustment Alredy Closed");
-			}
-			adjustmentDao.updateAdjustment(adjustmentId, status, modifiedBy, remarks);
-			if (status == Status.ACCEPT) {
-				if (adjustment.getAdjustmentType() == AdjustmentType.UP) {
-					stockService.stockUp(adjustment);
-				} else {
-					stockService.stockDown(adjustment);
-				}
-			}
-		} catch (Exception e) {
-			throw new StockManagementException(e.getMessage());
-		}
-
-	}
-
-	@Override
-	public List<Adjustment> getAdjustments() throws StockManagementException {
-
-		try {
-			List<Adjustment> adjustments = adjustmentDao.getAdjustments();
-			for (Adjustment adj : adjustments) {
-				adj.setAdjustmentDetails(adjustmentDao.getAdjustmentDetails(adj.getAdjustmentId()));
-			}
-			return adjustments;
-		} catch (Exception e) {
-			throw new StockManagementException(e.getMessage());
-		}
-
-	}
-
-	@Override
 	public long getAdjustmentsCount(AdjustmentCriteria adjustmentCriteria) {
 		try {	
 			return adjustmentDao.getAdjustmentCount(adjustmentCriteria);			
@@ -88,19 +47,51 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 
 	}
 	@Override
-	public List<Adjustment> getAdjustments(AdjustmentCriteria criteria) throws StockManagementException {
-		
+	public List<Adjustment> getAdjustmentsByCriteria(AdjustmentCriteria criteria) throws StockManagementException {
+
 		try {
-			List<Adjustment> adujstments=adjustmentDao.getAdjustmentsByCriteria(criteria);
-			if(adujstments == null)
-			{
+
+			List<Adjustment> adjustments = adjustmentDao.getAdjustmentsByCriteria(criteria);
+			if (adjustments == null) {
 				throw new StockManagementException("no Adjusmtents are found");
 			}
-			return adujstments;
+			if (criteria.isDetailsRequired()) {
+				for (Adjustment adjustment : adjustments) {
+					adjustment.setAdjustmentDetails(adjustmentDao.getAdjustmentDetails(adjustment.getAdjustmentId()));
+				}
+			}
+
+			return adjustments;
 		} catch (Exception e) {
 			throw new StockManagementException(e.getMessage());
 		}
-		
 	}
+	@Override
+	@Transactional
+	public void approveAdjustment(Long adjustmentId, String modifiedBy) {
+
+		try {
+			Adjustment adjustment = adjustmentDao.getAdjustmentById(adjustmentId);
+			adjustmentDao.updateAdjustment(adjustmentId, Status.ACCEPT, modifiedBy, "");
+			adjustment.setModifiedBy(modifiedBy);
+			adjustment.setAdjustmentDetails(adjustmentDao.getAdjustmentDetails(adjustmentId));
+			if (adjustment.getAdjustmentType() == AdjustmentType.UP) {
+				stockService.stockUp(adjustment);
+			} else {
+				stockService.stockDown(adjustment);
+			}
+
+		} catch (Exception e) {
+			throw new StockManagementException(e.getMessage());
+		}
+
+	}
+
+	@Override
+	public void withdrawAdjustment(Long adjustmentId, String modifiedBy, String remarks) {
+		adjustmentDao.updateAdjustment(adjustmentId, Status.REJECT, modifiedBy, remarks);
+	}
+
+	
 
 }

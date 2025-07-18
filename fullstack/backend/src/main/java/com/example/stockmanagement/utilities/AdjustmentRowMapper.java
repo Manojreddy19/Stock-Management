@@ -12,7 +12,6 @@ public class AdjustmentRowMapper implements RowMapper<Adjustment> {
 	@Override
 	public Adjustment mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Adjustment adjustment = new Adjustment();
-		System.out.println(rs.getLong("adjustmentId"));
 		adjustment.setAdjustmentId(rs.getLong("AdjustmentId"));
 
 		char adj = rs.getString("AdjustmentType").charAt(0);

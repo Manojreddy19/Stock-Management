@@ -57,20 +57,7 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 		throw new StockManagementException("Cannot update Adjustment");
 	}
 
-	@Override
-	public List<Adjustment> getAdjustments() throws StockManagementException {
-		try {
-			List<Adjustment> getAllAdjustments = namedParameterJdbcTemplate.query(SELECT_ALL_ADJUSTMENTS,
-					new AdjustmentRowMapper());
-			if (!getAllAdjustments.isEmpty())
-				return getAllAdjustments;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		throw new StockManagementException("No adjustments to show");
-	}
+	
 
 	@Override
 	public void addAdjustmentDetails(long id, List<AdjustmentDetail> adjustmentsToBeAdded)

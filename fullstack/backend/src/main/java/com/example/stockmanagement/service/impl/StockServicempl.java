@@ -20,7 +20,6 @@ import com.example.stockmanagement.service.StockService;
 @Service
 public class StockServicempl implements StockService {
 
-
 	@Autowired
 	private StockDao stockDao;
 	@Autowired
@@ -33,7 +32,7 @@ public class StockServicempl implements StockService {
 
 			List<AdjustmentDetail> adjustmentDetails = adjustmentDao
 					.getAdjustmentDetails(adjustmentHeader.getAdjustmentId());
-			Date now=new Date();
+			Date now = new Date();
 			for (AdjustmentDetail detail : adjustmentDetails) {
 				StockMaster stock = new StockMaster(detail.getProductId(), detail.getBatch(), null,
 						detail.getQuantity(), detail.getExpiryDate(), detail.getMrp(), adjustmentHeader.getCreatedBy(),
@@ -90,22 +89,32 @@ public class StockServicempl implements StockService {
 	}
 
 	@Override
-	public List<StockMaster> getAllStocks() throws StockManagementException {
-		return stockDao.getAllStocks();
-	}
-	@Override
 	public Map<Long, String> getBatches(String productId) throws StockManagementException {
-		
-		Map<Long, String>batches=null;
+
+		Map<Long, String> batches = null;
 		try {
 			batches = stockDao.getProductBatches(productId);
 			return batches;
-			
-		} 
-		catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new StockManagementException(e.getMessage());
 		}
 	}
 
+	@Override
+	public List<String> getProductIds(boolean isStockRequired) throws StockManagementException {
+		try {
+			return stockDao.getProductIds(isStockRequired);
+		} catch (Exception e) {
+			throw new StockManagementException(e.getMessage());
+		}
+	}
+
+	@Override
+	public StockMaster getStockDetail(String productId, Long batchId) throws StockManagementException{
+		return stockDao.getStockDetail(productId, batchId);
+	}
+
+	
 }

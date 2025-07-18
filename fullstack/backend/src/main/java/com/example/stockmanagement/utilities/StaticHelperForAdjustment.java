@@ -153,4 +153,15 @@ public class StaticHelperForAdjustment {
 		return params;
 	}
 
+	public static MapSqlParameterSource getParamsForProductIds(Boolean isStockRequired) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		int flag=1;
+		if(isStockRequired) {
+			flag=0;
+		}
+		
+		params.addValue("flag", flag);
+		return params;
+	}
+
 }

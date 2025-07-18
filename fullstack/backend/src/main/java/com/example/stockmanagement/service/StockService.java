@@ -13,8 +13,10 @@ public interface StockService  {
 
 	public void stockDown(Adjustment adjustmentHeader) throws StockManagementException;
 
-	public List<StockMaster> getAllStocks() throws StockManagementException;
-
 	Map<Long, String> getBatches(String productId) throws StockManagementException;
+
+	List<String> getProductIds(boolean isStockRequired) throws StockManagementException;
+
+	StockMaster getStockDetail(String productId, Long batchId)throws StockManagementException;
 
 }

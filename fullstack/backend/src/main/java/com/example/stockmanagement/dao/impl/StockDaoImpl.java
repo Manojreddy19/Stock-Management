@@ -15,6 +15,8 @@ import com.example.stockmanagement.dao.queries.StockQueries;
 import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
 import com.example.stockmanagement.exception.StockManagementException;
+import com.example.stockmanagement.utilities.ProductIdRowMapper;
+import com.example.stockmanagement.utilities.StaticHelperForAdjustment;
 import com.example.stockmanagement.utilities.StockDetailsExtractor;
 import com.example.stockmanagement.utilities.StockMapper;
 import com.example.stockmanagement.utilities.StockParameterMapper;
@@ -80,21 +82,6 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 		throw new StockManagementException("Failed to modify stock quantity for BatchId: " + bId);
 	}
 
-	@Override
-	public List<StockMaster> getAllStocks() throws StockManagementException {
-		String sql = GET_ALL_STOCKS;
-		List<StockMaster> stocks = null;
-		try {
-			stocks = namedParameterJdbcTemplate.query(sql, new StockMapper());
-			return stocks;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		throw new StockManagementException("no stocks found with positive quantity");
-
-	}
 
 	@Override
 	public void addStockTrack(StockTrack stocktrack) throws StockManagementException {
@@ -113,15 +100,15 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 
 		throw new StockManagementException("Failed to insert stockTrack ");
 	}
+
 	@Override
 	public Map<Long, String> getProductBatches(String productId) throws StockManagementException {
-		String sqlString= GET_BATCH_AND_BATCHID_BY_PID;
-		Map<Long, String>batches=null;
+		String sqlString = GET_BATCH_AND_BATCHID_BY_PID;
+		Map<Long, String> batches = null;
 		try {
 			MapSqlParameterSource params = stockParameterMapper.mapProductIdParameter(productId);
-			batches= namedParameterJdbcTemplate.query(sqlString,params,new StockDetailsExtractor());
-			if(batches == null)
-			{
+			batches = namedParameterJdbcTemplate.query(sqlString, params, new StockDetailsExtractor());
+			if (batches == null) {
 				throw new StockManagementException("no batches with the given productid");
 			}
 			return batches;
@@ -129,6 +116,40 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 			e.printStackTrace();
 			throw new StockManagementException(e.getMessage());
 		}
+	}
+
+	@Override
+	public List<String> getProductIds(boolean isStockRequired) throws StockManagementException {
+		try {
+			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsForProductIds(isStockRequired);
+			System.out.println("parameters are " + params);
+			List<String> productIds = namedParameterJdbcTemplate.query(SELECT_ALL_PRODUCT_IDS, params,
+					new ProductIdRowMapper());
+
+			System.out.println("product ids are : " + productIds);
+			return productIds;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new StockManagementException("Error in fetching product ids");
+		}
+
+	}
+
+	@Override
+	public StockMaster getStockDetail(String productId, Long batchId) throws StockManagementException {
+		MapSqlParameterSource params = stockParameterMapper.mapProductIdAndBatchIdParameter(productId, batchId);
+		StockMaster stock = null;
+		try { 
+			stock = namedParameterJdbcTemplate.queryForObject(SELECT_STOCK_DETAIL_BY_PID_AND_BID, params,
+					new StockMapper());
+		} catch (StockManagementException e) {
+			e.printStackTrace();
+		}
+		if (stock == null)
+			throw new StockManagementException(
+					"No Stock Found for product Id: " + productId + " and BatchId: " + batchId);
+		return stock;
 	}
 
 }
