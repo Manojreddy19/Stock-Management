@@ -15,4 +15,6 @@ public interface AdjustmentService {
 	public List<Adjustment> getAdjustments() throws StockManagementException;
 
 	public long getAdjustmentsCount(AdjustmentCriteria adjustmentCriteria);
+
+	List<Adjustment> getAdjustments(AdjustmentCriteria criteria) throws StockManagementException;
 }

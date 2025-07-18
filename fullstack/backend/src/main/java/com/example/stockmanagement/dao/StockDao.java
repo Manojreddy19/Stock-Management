@@ -1,6 +1,7 @@
 package com.example.stockmanagement.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
@@ -16,5 +17,7 @@ public interface StockDao {
 	public List<StockMaster> getAllStocks() throws StockManagementException;
 
 	public void addStockTrack(StockTrack stocktrack) throws StockManagementException;
+
+	 public Map<Long, String> getProductBatches(String productId) throws StockManagementException;
 
 }

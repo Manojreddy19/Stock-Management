@@ -26,4 +26,6 @@ public interface AdjustmentDao {
 	public Adjustment getAdjustmentById(long adjustmentId) throws StockManagementException;
 
 	public List<AdjustmentDetail> getAdjustmentDetails(long adjustmentId) throws StockManagementException;
+
+	List<Adjustment> getAdjustmentsByCriteria(AdjustmentCriteria criteria) throws StockManagementException;
 }

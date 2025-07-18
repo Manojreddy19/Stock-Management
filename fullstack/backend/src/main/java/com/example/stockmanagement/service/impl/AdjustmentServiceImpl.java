@@ -87,4 +87,20 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 		}
 
 	}
+	@Override
+	public List<Adjustment> getAdjustments(AdjustmentCriteria criteria) throws StockManagementException {
+		
+		try {
+			List<Adjustment> adujstments=adjustmentDao.getAdjustmentsByCriteria(criteria);
+			if(adujstments == null)
+			{
+				throw new StockManagementException("no Adjusmtents are found");
+			}
+			return adujstments;
+		} catch (Exception e) {
+			throw new StockManagementException(e.getMessage());
+		}
+		
+	}
+
 }

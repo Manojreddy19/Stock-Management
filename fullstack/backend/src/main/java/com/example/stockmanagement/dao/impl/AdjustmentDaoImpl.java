@@ -143,5 +143,17 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 		}
 
 	}
+	@Override
+	public List<Adjustment> getAdjustmentsByCriteria(AdjustmentCriteria criteria) throws StockManagementException {
+		try {
+			MapSqlParameterSource params = StaticHelperForAdjustment.getParamForSearchCriteria(criteria);
+			List<Adjustment> getAllAdjustment= namedParameterJdbcTemplate.query(SELECT_ALL_ADJUSTMENTS_BY_CRITERIA, params,new AdjustmentRowMapper());
+			return getAllAdjustment;
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new StockManagementException(e.getMessage());
+		}
+	}
 
 }

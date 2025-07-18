@@ -1,5 +1,6 @@
 package com.example.stockmanagement.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +22,6 @@ import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.exception.StockManagementException;
 import com.example.stockmanagement.service.AdjustmentService;
 import com.example.stockmanagement.service.StockService;
-import com.example.stockmanagement.utilities.AdjustmentType;
 import com.example.stockmanagement.utilities.Status;
 
 @RestController
@@ -62,6 +63,29 @@ public class AdjustmentController {
 		}
 
 	}
+	@GetMapping("/getBatches/{productId}")
+	public Map<Long, String> getBatches(@PathVariable String productId)
+	{
+		System.out.println(productId);
+		return stockService.getBatches(productId);
+		
+	}
+	@PostMapping("/getAdjustmentsByCriteria")
+	public List<Adjustment> getAdjusmtent(@RequestBody @Valid AdjustmentCriteria criteria)
+	{
+		try
+		{
+			
+			List<Adjustment> adjustments= new ArrayList<>();
+			adjustments=adjustmentService.getAdjustments(criteria);
+			return adjustments;
+		}
+		catch(StockManagementException e)
+		{
+			return null;
+		}
+		
+	}
 
 //	@CrossOrigin(origins = "*")
 	@GetMapping("/getStocks")
@@ -101,7 +125,7 @@ public class AdjustmentController {
 
 	}
 
-	@GetMapping("/getAdjustmentsCount")
+	@PostMapping("/getAdjustmentsCount")
 	public ResponseEntity<?> getAdjustmentCount(@RequestBody AdjustmentCriteria adjustmentCriteria) {
 		try {
 			long val = adjustmentService.getAdjustmentsCount(adjustmentCriteria);

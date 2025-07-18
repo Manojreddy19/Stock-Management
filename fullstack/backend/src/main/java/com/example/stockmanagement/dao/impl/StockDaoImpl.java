@@ -1,6 +1,7 @@
 package com.example.stockmanagement.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +15,7 @@ import com.example.stockmanagement.dao.queries.StockQueries;
 import com.example.stockmanagement.domain.StockMaster;
 import com.example.stockmanagement.domain.StockTrack;
 import com.example.stockmanagement.exception.StockManagementException;
+import com.example.stockmanagement.utilities.StockDetailsExtractor;
 import com.example.stockmanagement.utilities.StockMapper;
 import com.example.stockmanagement.utilities.StockParameterMapper;
 
@@ -110,6 +112,23 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 		}
 
 		throw new StockManagementException("Failed to insert stockTrack ");
+	}
+	@Override
+	public Map<Long, String> getProductBatches(String productId) throws StockManagementException {
+		String sqlString= GET_BATCH_AND_BATCHID_BY_PID;
+		Map<Long, String>batches=null;
+		try {
+			MapSqlParameterSource params = stockParameterMapper.mapProductIdParameter(productId);
+			batches= namedParameterJdbcTemplate.query(sqlString,params,new StockDetailsExtractor());
+			if(batches == null)
+			{
+				throw new StockManagementException("no batches with the given productid");
+			}
+			return batches;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new StockManagementException(e.getMessage());
+		}
 	}
 
 }

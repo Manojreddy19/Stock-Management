@@ -71,12 +71,9 @@ public class StaticHelperForAdjustment {
 			params.addValue("Status", 1);
 
 		}
-		
-		
 
 		if (criteria.getAdjustmentId() != null) {
 			params.addValue("idFlag", 1);
-			
 
 		} else {
 			params.addValue("idFlag", 0);
@@ -84,22 +81,76 @@ public class StaticHelperForAdjustment {
 
 		}
 		params.addValue("AdjustmentId", criteria.getAdjustmentId());
-		
-		
 
-		if (criteria.getCreatedFrom() != null && criteria.getCreatedTo() != null) {
-			params.addValue("createdFlag", 1);
-			
+		if (criteria.getCreatedFrom() != null) {
+			params.addValue("createdFromFlag", 1);
 
 		} else {
-			params.addValue("createdFlag", 0);
+			params.addValue("createdFromFlag", 0);
 
 		}
 		params.addValue("from", criteria.getCreatedFrom());
+
+		if (criteria.getCreatedTo() != null) {
+			params.addValue("createdToFlag", 1);
+
+		} else {
+			params.addValue("createdToFlag", 0);
+
+		}
 		params.addValue("to", criteria.getCreatedTo());
-		
+
 		return params;
 
+	}
+
+	public static MapSqlParameterSource getParamForSearchCriteria(AdjustmentCriteria criteria) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		String type = String.valueOf(criteria.getAdjustmentType().getValue());
+		params.addValue("AdjustmentType", type);
+		System.out.println(type);
+		if (criteria.getAdjustmentId() != null) {
+			params.addValue("adjustmentIdFlag", 1);
+			params.addValue("AdjustmentId", criteria.getAdjustmentId());
+		} else {
+			params.addValue("adjustmentIdFlag", 0);
+			params.addValue("AdjustmentId", 1);
+		}
+		if (criteria.getCreatedFrom() != null) {
+			params.addValue("createdFromFlag", 1);
+			params.addValue("CreatedFrom", criteria.getCreatedFrom());
+		} else {
+			params.addValue("createdFromFlag", 0);
+			params.addValue("CreatedFrom", 1);
+		}
+		if (criteria.getCreatedTo() != null) {
+			params.addValue("createdToFlag", 1);
+			params.addValue("CreatedTo", criteria.getCreatedTo());
+		} else {
+			params.addValue("createdToFlag", 0);
+			params.addValue("CreatedTo", 1);
+		}
+		if (criteria.getStatus() != null) {
+			params.addValue("statusFlag", 1);
+			params.addValue("Staus", String.valueOf(criteria.getStatus().getValue()));
+		} else {
+			params.addValue("statusFlag", 0);
+			params.addValue("Staus", 1);
+		}
+		if (criteria.getLimitFrom() != null) {
+
+			params.addValue("LimitFrom", criteria.getLimitFrom());
+		} else {
+			params.addValue("LimitFrom", 5);
+		}
+		if (criteria.getNoOfRows() != null) {
+
+			params.addValue("NoOfRows", criteria.getNoOfRows());
+		} else {
+			params.addValue("NoOfRows", 0);
+		}
+
+		return params;
 	}
 
 }
