@@ -82,7 +82,6 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 		throw new StockManagementException("Failed to modify stock quantity for BatchId: " + bId);
 	}
 
-
 	@Override
 	public void addStockTrack(StockTrack stocktrack) throws StockManagementException {
 
@@ -122,11 +121,8 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	public List<String> getProductIds(boolean isStockRequired) throws StockManagementException {
 		try {
 			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsForProductIds(isStockRequired);
-			System.out.println("parameters are " + params);
 			List<String> productIds = namedParameterJdbcTemplate.query(SELECT_ALL_PRODUCT_IDS, params,
 					new ProductIdRowMapper());
-
-			System.out.println("product ids are : " + productIds);
 			return productIds;
 
 		} catch (Exception e) {
@@ -140,7 +136,7 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	public StockMaster getStockDetail(String productId, Long batchId) throws StockManagementException {
 		MapSqlParameterSource params = stockParameterMapper.mapProductIdAndBatchIdParameter(productId, batchId);
 		StockMaster stock = null;
-		try { 
+		try {
 			stock = namedParameterJdbcTemplate.queryForObject(SELECT_STOCK_DETAIL_BY_PID_AND_BID, params,
 					new StockMapper());
 		} catch (StockManagementException e) {
