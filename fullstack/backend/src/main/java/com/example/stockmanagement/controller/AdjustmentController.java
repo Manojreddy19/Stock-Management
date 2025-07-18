@@ -1,7 +1,5 @@
 package com.example.stockmanagement.controller;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -68,10 +65,8 @@ public class AdjustmentController {
 
 //	@CrossOrigin(origins = "*")
 	@GetMapping("/getStocks")
-	public ResponseEntity<List<StockMaster>> getStocks(
-			@CookieValue(value = "JSESSIONID", required = false) String jSessionId) {
+	public ResponseEntity<List<StockMaster>> getStocks() {
 
-		System.out.println(jSessionId);
 		List<StockMaster> stock = null;
 		try {
 			stock = stockService.getAllStocks();
@@ -94,7 +89,7 @@ public class AdjustmentController {
 			Status status = Status.valueOf(statusChar);
 			String modifiedBy = requestParameters.get("modifiedBy");
 			String remarks = requestParameters.get("remarks");
-			System.out.println("remarks " + remarks);
+
 			adjustmentService.updateStatus(adjustmentId, status, modifiedBy, remarks);
 
 		} catch (StockManagementException e) {
@@ -106,29 +101,16 @@ public class AdjustmentController {
 
 	}
 
-	@GetMapping("/test")
-	public void test() {
-		System.out.println("Here");
-		AdjustmentCriteria ad = new AdjustmentCriteria();
+	@GetMapping("/getAdjustmentsCount")
+	public ResponseEntity<?> getAdjustmentCount(@RequestBody AdjustmentCriteria adjustmentCriteria) {
+		try {
+			long val = adjustmentService.getAdjustmentsCount(adjustmentCriteria);
+			return ResponseEntity.status(200).body(val);
 
-		Date currentDate = new Date(); // current date
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(currentDate);
-		cal.add(Calendar.DAY_OF_MONTH, -5); // subtract 5 days
+		} catch (StockManagementException e) {
+			return ResponseEntity.status(500).body(new Response("500", e.getMessage()));
+		}
 
-		Date fiveDaysAgo = cal.getTime();
-		System.out.println("Current: " + currentDate);
-		System.out.println("5 Days Ago: " + fiveDaysAgo);
-		ad.setCreatedFrom(fiveDaysAgo);
-		
-		ad.setCreatedTo(new Date());
-		ad.setAdjustmentType(AdjustmentType.UP);
-		ad.setStatus(Status.ACCEPT);
-		long val = adjustmentService.getAdjustmentsCount(ad);
-		System.out.println(val);
 	}
 
 }
-
-//Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//System.out.println( auth.getPrincipal());

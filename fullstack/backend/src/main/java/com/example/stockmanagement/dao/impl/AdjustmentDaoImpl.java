@@ -132,27 +132,10 @@ public class AdjustmentDaoImpl extends AdjustmentQueries implements AdjustmentDa
 	@Override
 	public long getAdjustmentCount(AdjustmentCriteria adjustmentCriteria) {
 		try {
-			System.out.println("In DAO"+adjustmentCriteria);
-			MapSqlParameterSource params = new MapSqlParameterSource();
-			System.out.println("Here"+adjustmentCriteria);
-			params.addValue("AdjustmentType", String.valueOf(adjustmentCriteria.getAdjustmentType().getValue()));
-			params.addValue("Status", String.valueOf(adjustmentCriteria.getStatus().getValue()));
-			StringBuilder query = new StringBuilder(GET_ADJUSTMENT_COUNT);
 
-			if (adjustmentCriteria.getAdjustmentId() != null) {
-				query.append(" AND AdjustmentId=:AdjustmentId ");
-				params.addValue(" AdjustmentId ", adjustmentCriteria.getAdjustmentId());
+			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsToAdjustmentCount(adjustmentCriteria);
 
-			}
-			if (adjustmentCriteria.getCreatedFrom() != null && adjustmentCriteria.getCreatedTo() != null) {
-				query.append("AND CreatedAt BETWEEN :from AND :to");
-				params.addValue("from", adjustmentCriteria.getCreatedFrom());
-				params.addValue("to", adjustmentCriteria.getCreatedTo());
-
-			}
-			System.out.println(query.toString());
-
-			return namedParameterJdbcTemplate.queryForObject(query.toString(), params, Long.class);
+			return namedParameterJdbcTemplate.queryForObject(GET_ADJUSTMENT_COUNT, params, Long.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();

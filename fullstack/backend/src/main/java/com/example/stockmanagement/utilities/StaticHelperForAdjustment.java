@@ -7,8 +7,8 @@ import com.example.stockmanagement.domain.AdjustmentCriteria;
 import com.example.stockmanagement.domain.AdjustmentDetail;
 
 public class StaticHelperForAdjustment {
-	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Status status,
-			String modifiedBy, String remarks) {
+	public static MapSqlParameterSource getParamsToUpdateOnApproval(Long adjustmentId, Status status, String modifiedBy,
+			String remarks) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("AdjustmentId", adjustmentId);
 		System.out.println("Status Value " + status.getValue());
@@ -57,23 +57,49 @@ public class StaticHelperForAdjustment {
 		params.addValue("Amount", detail.getAmount());
 		return params;
 	}
-	
-	public static String queryForGetAdjustmentCount(String sql,AdjustmentCriteria adjustmentCriteria)
-	{
-		sql+="AND Status="+String.valueOf(adjustmentCriteria.getStatus().getValue()) ;
-		if(adjustmentCriteria.getAdjustmentId()!=null)
-		{
-			sql+="AND AdjustmentId="+ String.valueOf(adjustmentCriteria.getAdjustmentId());
-		}
-		if(adjustmentCriteria.getCreatedFrom()!=null && adjustmentCriteria.getCreatedTo()!=null)
-		{
-			sql+="AND CreatedAT BETWEEN "+adjustmentCriteria.getCreatedFrom()
-			+" And "+adjustmentCriteria.getCreatedTo();
-		}
 
+	public static MapSqlParameterSource getParamsToAdjustmentCount(AdjustmentCriteria criteria) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("AdjustmentType", String.valueOf(criteria.getAdjustmentType().getValue()));
+
+		if (criteria.getStatus() != null) {
+			params.addValue("statusFlag", 1);
+			params.addValue("Status", String.valueOf(criteria.getStatus().getValue()));
+
+		} else {
+			params.addValue("statusFlag", 0);
+			params.addValue("Status", 1);
+
+		}
 		
 		
-		return sql+";";
+
+		if (criteria.getAdjustmentId() != null) {
+			params.addValue("idFlag", 1);
+			
+
+		} else {
+			params.addValue("idFlag", 0);
+			params.addValue("AdjustmentId", 1);
+
+		}
+		params.addValue("AdjustmentId", criteria.getAdjustmentId());
+		
+		
+
+		if (criteria.getCreatedFrom() != null && criteria.getCreatedTo() != null) {
+			params.addValue("createdFlag", 1);
+			
+
+		} else {
+			params.addValue("createdFlag", 0);
+
+		}
+		params.addValue("from", criteria.getCreatedFrom());
+		params.addValue("to", criteria.getCreatedTo());
+		
+		return params;
+
 	}
 
 }

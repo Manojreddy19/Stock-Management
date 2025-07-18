@@ -13,5 +13,6 @@ public interface AdjustmentService {
 	public void updateStatus(Long adjustmentId, Status status, String modifiedBy, String remarks) throws StockManagementException;
 
 	public List<Adjustment> getAdjustments() throws StockManagementException;
+
 	public long getAdjustmentsCount(AdjustmentCriteria adjustmentCriteria);
 }

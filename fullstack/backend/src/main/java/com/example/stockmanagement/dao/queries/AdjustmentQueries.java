@@ -9,5 +9,6 @@ public class AdjustmentQueries {
 	protected String SELECT_ALL_ADJUSTMENT_DETAILS = "SELECT * FROM tbl_adjustment_details WHERE AdjustmentId = :adjustmentId";
 	protected String SELECT_ALL_ADJUSTMENTS_BY_ID = "SELECT * FROM tbl_adjustment_header WHERE AdjustmentId = :adjustmentId";
 	
-	protected String GET_ADJUSTMENT_COUNT="SELECT COUNT(*) FROM tbl_adjustment_header WHERE AdjustmentType=:AdjustmentType and Status=:Status ";
+	protected String GET_ADJUSTMENT_COUNT="SELECT COUNT(*) FROM tbl_adjustment_header WHERE AdjustmentType=:AdjustmentType AND "
+			+ "(:statusFlag=0 OR Status=:Status) AND (:idFlag=0 OR AdjustmentId=:AdjustmentId ) AND (:createdFlag=0 OR CreatedAt BETWEEN :from AND :to)";
 }

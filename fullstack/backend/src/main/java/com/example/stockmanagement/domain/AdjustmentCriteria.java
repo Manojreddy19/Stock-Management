@@ -2,12 +2,15 @@ package com.example.stockmanagement.domain;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.example.stockmanagement.utilities.AdjustmentType;
 import com.example.stockmanagement.utilities.Status;
 
 public class AdjustmentCriteria {
 	Long adjustmentId;
 	Status status;
+	@NotNull(message ="Adjustment type is required")
 	AdjustmentType adjustmentType;
 	Date createdFrom;
 	Date createdTo;
