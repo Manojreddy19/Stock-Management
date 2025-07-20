@@ -1,0 +1,186 @@
+create schema stock_management;
+
+use stock_management;
+
+CREATE TABLE `tbl_adjustment_header` (
+  `AdjustmentId` INT NOT NULL AUTO_INCREMENT,
+  `AdjustmentType` CHAR(1) NOT NULL COMMENT 'U:UP , D:DOWN',
+  `Amount` DOUBLE(8,2) NOT NULL,
+  `Status` CHAR(1) NOT NULL COMMENT 'OPEN("O"), ACCEPT("A"), REJECT("R")',
+  `Remarks` VARCHAR(255) DEFAULT NULL,
+  `CreatedBy` VARCHAR(20) NOT NULL,
+  `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ModifiedBy` VARCHAR(20) DEFAULT NULL,
+  `ModifiedAt` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `SysTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`AdjustmentId`)
+);
+
+
+CREATE TABLE `tbl_adjustment_details` (
+  `AdjustmentId` INT NOT NULL,
+  `ProductId` VARCHAR(20) NOT NULL,
+  `Batch` VARCHAR(45) NOT NULL,
+  `BatchId` BIGINT DEFAULT NULL,
+  `Quantity` INT NOT NULL,
+  `Mrp` DOUBLE(8,2) NOT NULL,
+  `ExpiryDate` DATE DEFAULT NULL,
+  `Amount` DOUBLE(8,2) NOT NULL,
+  `GeneratedBatchId` VARCHAR(45) DEFAULT NULL,
+  `SysTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `tbl_stock_master` (
+  `ProductId` VARCHAR(20) NOT NULL,
+  `BatchId` BIGINT NOT NULL AUTO_INCREMENT,
+  `Batch` VARCHAR(45) NOT NULL,
+  `Quantity` INT NOT NULL,
+  `Mrp` DOUBLE(8,2) NOT NULL,
+  `ExpiryDate` DATE NOT NULL,
+  `CreatedBy` VARCHAR(20) NOT NULL,
+  `CreatedAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `ModifiedBy` VARCHAR(45) DEFAULT NULL,
+  `ModifiedAt` TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `SysTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`BatchId`)
+);
+
+
+CREATE TABLE `tbl_stock_track` (
+  `BatchId` BIGINT NOT NULL,
+  `TransactionType` CHAR(1) NOT NULL,
+  `Quantity` INT NOT NULL,
+  `OpenStock` INT NOT NULL,
+  `CreatedBy` VARCHAR(45) NOT NULL,
+  `CreatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `SysTime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- Insert into tbl_adjustment_header
+INSERT INTO tbl_adjustment_header (AdjustmentType, Amount, Status, Remarks, CreatedBy, ModifiedBy) VALUES
+('U', 100.00, 'O', NULL, 'admin', 'admin'),
+('D', 50.00, 'A', NULL, 'user', 'admin'),
+('U', 200.00, 'R', 'Invalid entry rejected', 'user', 'admin'),
+('U', 300.00, 'O', NULL, 'admin', NULL),
+('D', 80.00, 'A', NULL, 'user', 'user'),
+('U', 150.00, 'R', 'Incorrect amount', 'admin', 'admin'),
+('D', 40.00, 'O', NULL, 'user', NULL),
+('U', 220.00, 'A', NULL, 'admin', 'admin'),
+('D', 60.00, 'R', 'Rejected due to mismatch', 'user', 'admin'),
+('U', 500.00, 'O', NULL, 'admin', NULL);
+
+-- Insert into tbl_adjustment_details
+INSERT INTO tbl_adjustment_details (AdjustmentId, ProductId, Batch, BatchId, Quantity, Mrp, ExpiryDate, Amount, GeneratedBatchId) VALUES
+(1, 'PRD001', 'BATCH1', 101, 10, 10.00, '2026-01-01', 100.00, 'GBID101'),
+(2, 'PRD002', 'BATCH2', 102, 5, 10.00, '2024-11-01', 50.00, 'GBID102'),
+(3, 'PRD003', 'BATCH3', 103, 20, 10.00, '2025-05-10', 200.00, NULL),
+(4, 'PRD004', 'BATCH4', 104, 30, 10.00, '2025-12-31', 300.00, 'GBID104'),
+(5, 'PRD005', 'BATCH5', 105, 8, 10.00, '2024-09-30', 80.00, NULL),
+(6, 'PRD006', 'BATCH6', 106, 15, 10.00, '2026-06-06', 150.00, 'GBID106'),
+(7, 'PRD007', 'BATCH7', 107, 4, 10.00, '2025-10-10', 40.00, NULL),
+(8, 'PRD008', 'BATCH8', 108, 22, 10.00, '2025-07-01', 220.00, 'GBID108'),
+(9, 'PRD009', 'BATCH9', 109, 6, 10.00, '2025-08-08', 60.00, NULL),
+(10, 'PRD010', 'BATCH10', 110, 50, 10.00, '2026-01-01', 500.00, 'GBID110');
+
+-- Insert into tbl_stock_master (ProductId restored)
+INSERT INTO tbl_stock_master (ProductId, Batch, Quantity, Mrp, ExpiryDate, CreatedBy) VALUES
+('PRD001', 'BATCH1', 100, 10.00, '2026-01-01', 'admin'),
+('PRD002', 'BATCH2', 60, 10.00, '2024-11-01', 'user'),
+('PRD003', 'BATCH3', 120, 10.00, '2025-05-10', 'user'),
+('PRD004', 'BATCH4', 90, 10.00, '2025-12-31', 'admin'),
+('PRD005', 'BATCH5', 30, 10.00, '2024-09-30', 'admin'),
+('PRD006', 'BATCH6', 75, 10.00, '2026-06-06', 'user'),
+('PRD007', 'BATCH7', 40, 10.00, '2025-10-10', 'user'),
+('PRD008', 'BATCH8', 110, 10.00, '2025-07-01', 'admin'),
+('PRD009', 'BATCH9', 25, 10.00, '2025-08-08', 'admin'),
+('PRD010', 'BATCH10', 200, 10.00, '2026-01-01', 'user');
+
+-- Insert into tbl_stock_track (ProductId removed)
+INSERT INTO tbl_stock_track (BatchId, TransactionType, Quantity, OpenStock, CreatedBy) VALUES
+(1, 'A', 10, 100, 'admin'),
+(2, 'D', 5, 60, 'user'),
+(3, 'A', 20, 120, 'user'),
+(4, 'A', 30, 90, 'admin'),
+(5, 'D', 8, 30, 'admin'),
+(6, 'A', 15, 75, 'user'),
+(7, 'D', 4, 40, 'user'),
+(8, 'A', 22, 110, 'admin'),
+(9, 'D', 6, 25, 'admin'),
+(10, 'A', 50, 200, 'user');
+
+
+
+INSERT INTO tbl_adjustment_header (AdjustmentId, AdjustmentType, Amount, Status, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt) 
+VALUES (101, 'U', 1500, 'R', 'admin', NOW(), 'admin', NOW());
+
+-- 12 OPEN Records
+INSERT INTO tbl_adjustment_header (adjustmentId, adjustmentType, Amount, Status, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt)
+VALUES
+(201, 'U', 100, 'O', 'admin', NOW(), 'admin', NOW()),
+(202, 'U', 200, 'O', 'admin', NOW(), 'admin', NOW()),
+(203, 'U', 300, 'O', 'admin', NOW(), 'admin', NOW()),
+(204, 'U', 400, 'O', 'admin', NOW(), 'admin', NOW()),
+(205, 'U', 500, 'O', 'admin', NOW(), 'admin', NOW()),
+(206, 'U', 600, 'O', 'admin', NOW(), 'admin', NOW()),
+(207, 'U', 700, 'O', 'admin', NOW(), 'admin', NOW()),
+(208, 'U', 800, 'O', 'admin', NOW(), 'admin', NOW()),
+(209, 'U', 900, 'O', 'admin', NOW(), 'admin', NOW()),
+(210, 'U', 1000, 'O', 'admin', NOW(), 'admin', NOW()),
+(211, 'U', 1100, 'O', 'admin', NOW(), 'admin', NOW()),
+(212, 'U', 1200, 'O', 'admin', NOW(), 'admin', NOW());
+
+-- 23 ACCEPT Records
+INSERT INTO tbl_adjustment_header (AdjustmentId, AdjustmentType, Amount, Status, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt)
+VALUES
+(213, 'U', 1300, 'A', 'admin', NOW(), 'admin', NOW()),
+(214, 'U', 1400, 'A', 'admin', NOW(), 'admin', NOW()),
+(215, 'U', 1500, 'A', 'admin', NOW(), 'admin', NOW()),
+(216, 'U', 1600, 'A', 'admin', NOW(), 'admin', NOW()),
+(217, 'U', 1700, 'A', 'admin', NOW(), 'admin', NOW()),
+(218, 'U', 1800, 'A', 'admin', NOW(), 'admin', NOW()),
+(219, 'U', 1900, 'A', 'admin', NOW(), 'admin', NOW()),
+(220, 'U', 2000, 'A', 'admin', NOW(), 'admin', NOW()),
+(221, 'U', 2100, 'A', 'admin', NOW(), 'admin', NOW()),
+(222, 'U', 2200, 'A', 'admin', NOW(), 'admin', NOW()),
+(223, 'U', 2300, 'A', 'admin', NOW(), 'admin', NOW()),
+(224, 'U', 2400, 'A', 'admin', NOW(), 'admin', NOW()),
+(225, 'U', 2500, 'A', 'admin', NOW(), 'admin', NOW()),
+(226, 'U', 2600, 'A', 'admin', NOW(), 'admin', NOW()),
+(227, 'U', 2700, 'A', 'admin', NOW(), 'admin', NOW()),
+(228, 'U', 2800, 'A', 'admin', NOW(), 'admin', NOW()),
+(229, 'U', 2900, 'A', 'admin', NOW(), 'admin', NOW()),
+(230, 'U', 3000, 'A', 'admin', NOW(), 'admin', NOW()),
+(231, 'U', 3100, 'A', 'admin', NOW(), 'admin', NOW()),
+(232, 'U', 3200, 'A', 'admin', NOW(), 'admin', NOW()),
+(233, 'U', 3300, 'A', 'admin', NOW(), 'admin', NOW()),
+(234, 'U', 3400, 'A', 'admin', NOW(), 'admin', NOW()),
+(235, 'U', 3500, 'A', 'admin', NOW(), 'admin', NOW());
+
+-- 5 REJECT Records
+INSERT INTO tbl_adjustment_header (AdjustmentId, AdjustmentType, Amount, Status, CreatedBy, CreatedAt, ModifiedBy, ModifiedAt)
+VALUES
+(236, 'U', 3600, 'R', 'admin', NOW(), 'admin', NOW()),
+(237, 'U', 3700, 'R', 'admin', NOW(), 'admin', NOW()),
+(238, 'U', 3800, 'R', 'admin', NOW(), 'admin', NOW()),
+(239, 'U', 3900, 'R', 'admin', NOW(), 'admin', NOW()),
+(240, 'U', 4000, 'R', 'admin', NOW(), 'admin', NOW());
+
+
+-- Get all adjustments from header table
+SELECT * FROM tbl_adjustment_header;
+
+-- Get all adjustment details
+SELECT * FROM tbl_adjustment_details;
+
+-- Get all stock master entries
+SELECT * FROM tbl_stock_master;
+
+-- Get all stock track entries
+SELECT * FROM tbl_stock_track;
+SELECT * FROM tbl_adjustment_header WHERE adjustmentType = 'U' AND Status = 'R';
+SELECT AdjustmentId, AdjustmentType, status FROM tbl_adjustment_header;
+SELECT * FROM tbl_adjustment_header WHERE adjustmentId = 208;
+SELECT AdjustmentId, AdjustmentType, Status FROM tbl_adjustment_header WHERE AdjustmentId = 208;-- 
+
+
