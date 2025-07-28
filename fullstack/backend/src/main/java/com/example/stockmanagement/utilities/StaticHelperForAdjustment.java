@@ -153,14 +153,16 @@ public class StaticHelperForAdjustment {
 		return params;
 	}
 
-	public static MapSqlParameterSource getParamsForProductIds(Boolean isStockRequired) {
+	public static MapSqlParameterSource getParamsForProductIds(Boolean isStockRequired, String productId) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
-		int flag=1;
-		if(isStockRequired) {
-			flag=0;
-		}
-		
-		params.addValue("flag", flag);
+
+		// If stock is required, apply quantity filter
+		params.addValue("flag", Boolean.TRUE.equals(isStockRequired) ? 0 : 1);
+
+		boolean hasProductId = (productId != null && !productId.trim().isEmpty());
+		params.addValue("productFlag", hasProductId ? 0 : 1);
+		params.addValue("productId", hasProductId ? "%" + productId.trim() + "%" : "");
+
 		return params;
 	}
 

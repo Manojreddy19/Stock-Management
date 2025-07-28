@@ -118,9 +118,9 @@ public class StockDaoImpl extends StockQueries implements StockDao {
 	}
 
 	@Override
-	public List<String> getProductIds(boolean isStockRequired) throws StockManagementException {
+	public List<String> getProductIds(boolean isStockRequired,String productId) throws StockManagementException {
 		try {
-			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsForProductIds(isStockRequired);
+			MapSqlParameterSource params = StaticHelperForAdjustment.getParamsForProductIds(isStockRequired, productId);
 			List<String> productIds = namedParameterJdbcTemplate.query(SELECT_ALL_PRODUCT_IDS, params,
 					new ProductIdRowMapper());
 			return productIds;

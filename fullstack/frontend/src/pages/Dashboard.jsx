@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import DashboardTable from "../components/DashboardTable";
-import fetchData from "../components/productstesting";
+// import fetchData from "../components/productstesting";
 import { ip } from '../assets/utils';
 import '../styles/dashborad.css'
 const Dashboard = () => {
-  const [adjustments, setAdjustments] = useState([]);
+  // const [adjustments, setAdjustments] = useState([]);
 
-  const fetchdata = async () => {
-    let data = await fetchData(`http://${ip}:8080/api/getAdjustments`, { withCredentials: true }
-    );
-    console.log("called")
-    setAdjustments(data);
-  };
+  // const fetchdata = async () => {
+  //   let data = await fetchData(`http://${ip}:8080/api/getAdjustments`, { withCredentials: true }
+  //   );
+  //   console.log("called")
+  //   setAdjustments(data);
+  // };
 
-  useEffect(() => {
-    fetchdata();
-  }, []);
+  // useEffect(() => {
+  //   fetchdata();
+  // }, []);
 
   const Headers = [
     "adjustmentId",
@@ -32,7 +32,8 @@ const Dashboard = () => {
   return (
     <div id="dashboard-container">
   
-  <DashboardTable headers={Headers} data={adjustments} fetchData={fetchdata}/>
+  <DashboardTable headers={Headers} />
+
   </div>
 );
 };

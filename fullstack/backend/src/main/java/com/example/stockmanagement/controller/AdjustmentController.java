@@ -106,10 +106,10 @@ public class AdjustmentController {
 	}
 
 	@GetMapping("/getProductIds")
-	public ResponseEntity<?> getProductIds(@RequestParam boolean isRequired) {
+	public ResponseEntity<?> getProductIds(@RequestParam boolean isRequired,@RequestParam(required = false) String productId) {
 		List<String> productIds = null;
 		try {
-			productIds = stockService.getProductIds(isRequired);
+			productIds = stockService.getProductIds(isRequired,productId);
 			return ResponseEntity.status(200).body(productIds);
 		} catch (StockManagementException e) {
 			return ResponseEntity.status(500).body(new Response("500",e.getMessage()));

@@ -103,9 +103,9 @@ public class StockServicempl implements StockService {
 	}
 
 	@Override
-	public List<String> getProductIds(boolean isStockRequired) throws StockManagementException {
+	public List<String> getProductIds(boolean isStockRequired,String productId) throws StockManagementException {
 		try {
-			return stockDao.getProductIds(isStockRequired);
+			return stockDao.getProductIds(isStockRequired,productId);
 		} catch (Exception e) {
 			throw new StockManagementException(e.getMessage());
 		}

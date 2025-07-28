@@ -15,7 +15,7 @@ public interface StockService  {
 
 	Map<Long, String> getBatches(String productId) throws StockManagementException;
 
-	List<String> getProductIds(boolean isStockRequired) throws StockManagementException;
+	List<String> getProductIds(boolean isStockRequired,String productId) throws StockManagementException;
 
 	StockMaster getStockDetail(String productId, Long batchId)throws StockManagementException;
 

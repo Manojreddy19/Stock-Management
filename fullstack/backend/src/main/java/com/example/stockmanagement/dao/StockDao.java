@@ -16,10 +16,10 @@ public interface StockDao {
 
 	public void addStockTrack(StockTrack stocktrack) throws StockManagementException;
 
-	 public Map<Long, String> getProductBatches(String productId) throws StockManagementException;
+	public Map<Long, String> getProductBatches(String productId) throws StockManagementException;
 
-	 List<String> getProductIds(boolean isStockRequired )throws StockManagementException;
+	List<String> getProductIds(boolean isStockRequired, String productId) throws StockManagementException;
 
-	 StockMaster getStockDetail(String productId, Long batchId) throws StockManagementException;
+	StockMaster getStockDetail(String productId, Long batchId) throws StockManagementException;
 
 }

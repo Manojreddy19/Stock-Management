@@ -21,15 +21,16 @@ const StockDownAdjustmentForm = () => {
   });
 
   const [adjustments, setAdjustments] = useState([]);
+  const [productIds, setProductIds] = useState([]);
+  const [productIdSuggestions, setProductIdSuggestions] = useState([]);
+  const [batchIds, setBatchIds] = useState([]);
+  const [batchSuggestions, setBatchSuggestions] = useState([]);
+  const [stock, setStock] = useState({});
   const [amount, setAmount] = useState(0);
-  const [fetchedData, setFetchedData] = useState([]);
   const [availableQty, setAvailableQty] = useState(null);
   const [quantityError, setQuantityError] = useState(false);
-
-  const [productSuggestions, setProductSuggestions] = useState([]);
-  const [batchSuggestions, setBatchSuggestions] = useState([]);
-  const [activeProductIndex, setActiveProductIndex] = useState(-1);
-  const [activeBatchIndex, setActiveBatchIndex] = useState(-1);
+  const [showProductSuggestions, setShowProductSuggestions] = useState(false);
+  const [showBatchSuggestions, setShowBatchSuggestions] = useState(false);
 
   const headers = [
     "productId",
@@ -37,83 +38,52 @@ const StockDownAdjustmentForm = () => {
     "batchId",
     "quantity",
     "expiryDate",
-    "MRP",
+    "mrp",
     "amount",
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
+const fetchData = async (value) => {
       try {
-        const response = await fetch(`http://${ip}:8080/api/getStocks`, {
+        const response = await fetch(`http://${ip}:8080/api/getProductIds?isRequired=false&productId=${value}`, {
           credentials: "include",
         });
         const result = await response.json();
-        setFetchedData(result);
+        setProductIdSuggestions(result);
       } catch (error) {
-        console.log(error);
-        toast.error("Failed to fetch stock data", { position: "bottom-left" });
+        console.error(error);
+        toast.error("Failed to fetch product IDs", { position: "bottom-left" });
       }
     };
-    fetchData();
-  }, []);
 
-  const allProductIds = [...new Set(fetchedData.map((item) => item.productId))];
+  let callTime;
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => {
-      const updated = { ...prev, [name]: value };
-      if (updated.mrp && updated.quantity) {
-        updated.amount = (
-          parseFloat(updated.mrp) * parseFloat(updated.quantity)
-        ).toFixed(2);
-      }
-      if (name === "quantity" && adjustmentType === "DOWN") {
-        const enteredQty = parseInt(value, 10);
-        setQuantityError(availableQty !== null && enteredQty > availableQty);
-      }
-      return updated;
-    });
+  const handleProductChange = (e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({ ...prev, productId: value }));
+
+    clearTimeout(callTime);
+
+    callTime= setTimeout(
+      ()=>{
+        fetchData(value)
+      },300
+    )
+    
   };
 
-  const handleAdd = (e) => {
-    e.preventDefault();
-    const { productId, batchDetails, quantity, amount } = formData;
-    if (!productId || !batchDetails || !quantity || !amount)
-      return toast.error("All fields are required", {
-        position: "bottom-left",
-      });
-
-    if (adjustmentType === "DOWN" && parseInt(quantity) > availableQty) {
-      return toast.error("Quantity exceeds available stock", {
-        position: "bottom-left",
-      });
+  const fetchBatchIds = async (productId) => {
+    try {
+      const response = await axios.get(
+        `http://${ip}:8080/api/getBatches?productId=${productId}`
+      );
+      const entries = Object.entries(response.data);
+      setBatchIds(entries);
+      setBatchSuggestions(entries);
+      return true;
+    } catch (err) {
+      toast.error("Failed to fetch batches", { position: "bottom-left" });
+      return false;
     }
-
-    if (
-      adjustments.some(
-        (item) =>
-          item.productId === productId.toUpperCase() &&
-          item.batchDetails === batchDetails
-      )
-    ) {
-      return toast.error("Duplicate record", { position: "bottom-left" });
-    }
-
-    const [batch, batchId] = formData.batchDetails.split("-");
-    const newEntry = {
-      productId: formData.productId,
-      batch: batch,
-      batchId: batchId,
-      quantity: formData.quantity,
-      expiryDate: formData.expiryDate,
-      mrp: formData.mrp,
-      amount: formData.amount,
-    };
-    setAdjustments((prev) => [...prev, newEntry]);
-    setAmount((prev) => prev + parseFloat(amount));
-    toast.success("Added successfully", { position: "bottom-left" });
-    resetForm();
   };
 
   const resetForm = () => {
@@ -126,42 +96,122 @@ const StockDownAdjustmentForm = () => {
       amount: "",
     });
     setAvailableQty(null);
-    setProductSuggestions([]);
+    setProductIdSuggestions([]);
     setBatchSuggestions([]);
+    setQuantityError(false);
   };
 
-  const handleProductChange = (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => {
+      const updated = { ...prev, [name]: value };
+
+      if (name === "quantity") {
+        const enteredQty = parseFloat(value);
+        if (
+          !isNaN(enteredQty) &&
+          availableQty !== null &&
+          enteredQty > availableQty
+        ) {
+          setQuantityError(true);
+        } else {
+          setQuantityError(false);
+        }
+      }
+
+      if (!isNaN(updated.mrp) && !isNaN(updated.quantity)) {
+        updated.amount = (
+          parseFloat(updated.mrp) * parseFloat(updated.quantity)
+        ).toFixed(2);
+      } else {
+        updated.amount = "";
+      }
+
+      return updated;
+    });
+  };
+
+  const handleAdd = (e) => {
+    e.preventDefault();
+    const { productId, batchDetails, quantity, amount } = formData;
+
+    if (!productId || !batchDetails || !quantity || !amount) {
+      return toast.error("All fields are required", {
+        position: "bottom-left",
+      });
+    }
+
+    const [batch, batchId] = batchDetails.split("-");
+
+    const newEntry = {
+      productId,
+      batch: batch.trim(),
+      batchId: batchId.trim(),
+      quantity,
+      expiryDate: formData.expiryDate,
+      mrp: formData.mrp,
+      amount,
+    };
+
+    setAdjustments((prev) => [...prev, newEntry]);
+    setAmount((prev) => prev + parseFloat(amount));
+    toast.success("Added successfully", { position: "bottom-left" });
+    resetForm();
+  };
+
+
+
+  const handleBatchIdsChange = (e) => {
     const value = e.target.value;
-    setFormData((prev) => ({ ...prev, productId: value }));
-    const filtered = allProductIds.filter((id) =>
-      id.toLowerCase().includes(value.toLowerCase())
+    setFormData((prev) => ({ ...prev, batchDetails: value }));
+    const filtered = batchIds.filter(
+      ([id, name]) =>
+        id.toLowerCase().includes(value.toLowerCase()) ||
+        name.toLowerCase().includes(value.toLowerCase())
     );
-    setProductSuggestions(filtered);
+    setBatchSuggestions(filtered);
   };
 
-  const selectProduct = (productId) => {
-    const matched = fetchedData.filter((item) => item.productId === productId);
+  const selectProduct = async (productId) => {
     setFormData((prev) => ({ ...prev, productId }));
-    setProductSuggestions([]);
-    setBatchSuggestions(matched.map((item) => `${item.batch}-${item.batchId}`));
+    await fetchBatchIds(productId);
+    setProductIdSuggestions([]);
   };
 
-  const handleBatchSelect = (batchDetail) => {
-    const match = fetchedData.find(
-      (item) => `${item.batch}-${item.batchId}` === batchDetail
-    );
-    if (match) {
+  const handleBatchSelect = async (batchId) => {
+    const selected = batchIds.find(([id]) => id === batchId);
+    if (!selected) return;
+
+    const [id, batchName] = selected;
+
+    try {
+      const res = await axios.get(
+        `http://${ip}:8080/api/getStockDetail?productId=${formData.productId}&batchId=${id}`
+      );
+      const stockData = res.data;
+      setStock(stockData);
+
+      const quantity = parseFloat(formData.quantity);
+      const mrp = parseFloat(stockData.mrp);
+      const computedAmount =
+        !isNaN(quantity) && !isNaN(mrp) ? (mrp * quantity).toFixed(2) : "";
+
       setFormData((prev) => ({
         ...prev,
-        batchDetails: batchDetail,
-        expiryDate: match.expiryDate,
-        mrp: match.mrp,
-        amount: match.mrp * (prev.quantity || 0),
+        batchDetails: `${batchName}-${id}`,
+        expiryDate: stockData.expiryDate,
+        mrp: stockData.mrp,
+        amount: computedAmount,
       }));
-      setAvailableQty(match.quantity);
+
+      setAvailableQty(stockData.quantity);
+      setBatchSuggestions([]);
+    } catch (err) {
+      toast.error("Failed to fetch stock details", { position: "bottom-left" });
     }
-    setBatchSuggestions([]);
   };
+
   const submitAdjustments = async () => {
     if (adjustments.length === 0) {
       toast.error("Please add adjustments before submitting", {
@@ -174,7 +224,7 @@ const StockDownAdjustmentForm = () => {
       adjustmentType,
       amount,
       createdBy,
-      adjustmentDetails: adjustments
+      adjustmentDetails: adjustments,
     };
 
     try {
@@ -186,6 +236,7 @@ const StockDownAdjustmentForm = () => {
           withCredentials: true,
         }
       );
+
       if (res.status === 201) {
         toast.success(res.data.message, { position: "bottom-left" });
         setAdjustments([]);
@@ -215,11 +266,15 @@ const StockDownAdjustmentForm = () => {
             name="productId"
             value={formData.productId}
             onChange={handleProductChange}
+            onFocus={() => setShowProductSuggestions(true)}
+            onBlur={() =>
+              setTimeout(() => setShowProductSuggestions(false), 150)
+            }
             required
           />
-          {productSuggestions.length > 0 && (
-            <ul className="list-group position-absolute w-100 zindex-dropdown">
-              {productSuggestions.map((item, index) => (
+          {showProductSuggestions && productIdSuggestions.length > 0 && (
+            <ul className="list-group position-absolute w-100 z-index-dropdown">
+              {productIdSuggestions.map((item, index) => (
                 <li
                   key={index}
                   className="list-group-item list-group-item-action"
@@ -238,20 +293,20 @@ const StockDownAdjustmentForm = () => {
             className="form-control form-control-sm"
             name="batchDetails"
             value={formData.batchDetails}
-            onChange={(e) =>
-              setFormData({ ...formData, batchDetails: e.target.value })
-            }
+            onChange={handleBatchIdsChange}
+            onFocus={() => setShowBatchSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowBatchSuggestions(false), 150)}
             required
           />
-          {batchSuggestions.length > 0 && (
-            <ul className="list-group position-absolute w-100 zindex-dropdown">
-              {batchSuggestions.map((item, index) => (
+          {showBatchSuggestions && batchSuggestions.length > 0 && (
+            <ul className="list-group position-absolute w-100 z-index-dropdown">
+              {batchSuggestions.map(([batchId, batchName], index) => (
                 <li
                   key={index}
                   className="list-group-item list-group-item-action"
-                  onClick={() => handleBatchSelect(item)}
+                  onClick={() => handleBatchSelect(batchId)}
                 >
-                  {item}
+                  {`${batchName} - ${batchId}`}
                 </li>
               ))}
             </ul>
@@ -306,7 +361,7 @@ const StockDownAdjustmentForm = () => {
           <input
             type="number"
             className="form-control form-control-sm"
-            value={formData.amount}
+            value={formData.amount || ""}
             readOnly
           />
         </div>
